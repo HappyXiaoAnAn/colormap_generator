@@ -114,6 +114,7 @@ function ColorSelector(props) {
 
 // 畫colorbar
 function Draw(color_out) {
+    ctx.clearRect(0,0,300,100);
     ctx.beginPath();
     ctx.rect(50, 30, 200, 40);
     ctx.stroke();
