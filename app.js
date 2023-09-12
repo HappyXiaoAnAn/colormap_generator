@@ -22,7 +22,8 @@ class ColorContainer extends React.Component {
     }
     addColorDown(i) {
         const colormap = this.state.colormap;
-        colormap.splice(i+1,0,'#ffffff');
+        colormap.splice(i+1,0,'');
+        if(colormap.slice(-1)=='') colormap[colormap.length-1]='#ffffff'; // make sure the last color is not null
         this.setState({
             colormap: colormap,
         });
@@ -90,7 +91,7 @@ class ColorContainer extends React.Component {
         return (
             <div>
                 <DefaultMaps changeMap={(e)=>this.changeMap(e)}/><br></br>
-                <input value={this.state.n_color_out} onChange={(e)=>{this.changeOutNum(e)}}></input>
+                <input type='number' step='1' value={this.state.n_color_out} onChange={(e)=>{this.changeOutNum(e)}} style={{width: '5em'}}></input>
                 <button onClick={() => this.addColor()}>▼</button>
                 {colors}
                 <textarea value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
@@ -142,14 +143,17 @@ function interpolate(arr, n_color_out) {
     const tmp = [];
     const result = [];
     
-    const delta = 1/(b); // 計算間隔
+    var color_left = 0;
     for (let j = 0; j < arr.length-1; j++) {
-        for (let i = 0; i < b; i++) {
-            const rr = arr[j][0]+(arr[j+1][0]-arr[j][0])*delta*i;
-            const gg = arr[j][1]+(arr[j+1][1]-arr[j][1])*delta*i;
-            const bb = arr[j][2]+(arr[j+1][2]-arr[j][2])*delta*i;
+        if(!arr[j+1]) continue;
+        var delta = 1/b/(j-color_left+1); // 計算間隔
+        for (let i = 0; i < b*(j-color_left+1); i++) {
+            const rr = arr[color_left][0]+(arr[j+1][0]-arr[color_left][0])*delta*i;
+            const gg = arr[color_left][1]+(arr[j+1][1]-arr[color_left][1])*delta*i;
+            const bb = arr[color_left][2]+(arr[j+1][2]-arr[color_left][2])*delta*i;
             tmp.push([parseInt(rr),parseInt(gg),parseInt(bb)])
         }
+        color_left = j+1;
     }
     tmp.push(arr[arr.length-1]);
     for (let i = 0; i < nn; i=i+a) {

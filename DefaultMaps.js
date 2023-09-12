@@ -113,7 +113,7 @@ function DefaultMaps(props) {
         }
     )
     return (
-        <select onChange={(e)=>props.changeMap(e)}>
+        <select title='colormaps' onChange={(e)=>props.changeMap(e)}>
             {tmp}
         </select>
     )
