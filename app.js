@@ -90,11 +90,16 @@ class ColorContainer extends React.Component {
         })
         return (
             <div>
-                <DefaultMaps changeMap={(e)=>this.changeMap(e)}/><br></br>
-                <input type='number' step='1' value={this.state.n_color_out} onChange={(e)=>{this.changeOutNum(e)}} style={{width: '5em'}}></input>
-                <button onClick={() => this.addColor()}>▼</button>
-                {colors}
-                <textarea value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
+                <DefaultMaps changeMap={(e)=>this.changeMap(e)}/><br></br><hr></hr>
+                <div>
+                    <div class="selector">
+                        <label>n_output colors: </label>
+                        <input type='number' step='1' value={this.state.n_color_out} onChange={(e)=>{this.changeOutNum(e)}} style={{width: '3em'}}></input>
+                        <button onClick={() => this.addColor()}>▼</button>
+                        {colors}
+                    </div>
+                    <textarea class="txtarea" value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
+                </div>
             </div>
         );
     }
