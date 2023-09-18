@@ -2,45 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>colormap generator</title>
-    <!-- Load React. -->
-    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <style>
-      #root_container {
-        position: relative;
-        width: 430px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      .selector {
-        position: absolute;
-        left: 0;
-      }
-      .txtarea {
-        position: absolute;
-        right: 0;
-      }
-    </style>
   </head>
-  <body style="text-align:center">
-    <h1>Happy</h1>
-    <canvas id="canvas" height="100" width="300"></canvas><br>
-    <div id="root_container">
+  <body>
+    <div style="text-align: center;">
+      <h1>Happy</h1>
+      <canvas id="canvas" height="100" width="500"></canvas>
     </div>
-      <!-- <b>color: </b><input type="color" id='clockColor' onchange="clockColor()" style="width: 5em" list='defaultColors'><br>
-      <datalist id="defaultColors">
-          <option>#8FCBFF</option>
-          <option>#A1E8C7</option>
-          <option>#FFFFFF</option>
-          <option>#F0F0F0</option>
-          <option>#000000</option>
-      </datalist> -->
-    <!-- Load our React component. -->
-    <!-- <script src="index.js"></script> -->
-    <script data-plugins="transform-es2015-modules-umd" src="DefaultMaps.js" type="text/babel"></script>
-    <script data-plugins="transform-es2015-modules-umd" src="app.js" type="text/babel"></script>
+    <div id="root">
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
