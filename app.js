@@ -92,13 +92,13 @@ class ColorContainer extends React.Component {
             <div>
                 <DefaultMaps changeMap={(e)=>this.changeMap(e)}/><br></br><hr></hr>
                 <div>
-                    <div class="selector">
+                    <div className="selector">
                         <label>n_output colors: </label>
                         <input type='number' step='1' value={this.state.n_color_out} onChange={(e)=>{this.changeOutNum(e)}} style={{width: '3em'}}></input>
                         <button onClick={() => this.addColor()}>▼</button>
                         {colors}
                     </div>
-                    <textarea class="txtarea" value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
+                    <textarea className="txtarea" value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
                 </div>
             </div>
         );
