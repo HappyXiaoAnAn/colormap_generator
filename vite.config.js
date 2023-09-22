@@ -10,4 +10,5 @@ export default defineConfig({
       '@shoelace-style/shoelace': path.resolve(__dirname, 'node_modules/@shoelace-style/shoelace'),
     },
   },
+  base: './',
 })

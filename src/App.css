@@ -12,7 +12,7 @@
   position: absolute;
   right: 0;
 }
-button {
+.adjust_btn {
   width: 25px;
   height: 25px;
   padding: 0;
@@ -24,6 +24,10 @@ button {
   width: 25px;
   height: 25px;
   /* border-radius: 0; */
+}
+
+[popover] {
+  position: relative;
 }
 
 .logo {

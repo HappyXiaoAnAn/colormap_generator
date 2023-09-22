@@ -94,14 +94,20 @@ function ColorContainer() {
   color_out_rgb.map((tmp)=>{
       color_out_rgb_str += (tmp[0]+'\t'+tmp[1]+'\t'+tmp[2]+'\n')
   })
+  let python_code = output_function_for_matplotlib(color_out_rgb)
   return (
       <>
-          <DefaultMaps changeMap={(e)=>changeMap(e)} /><br></br><hr></hr>
+          <DefaultMaps changeMap={(e)=>changeMap(e)} />
+          <button popovertarget="my-popover">python code</button>
+          <div popover="auto" id="my-popover">
+            <textarea value={python_code}></textarea>
+          </div>
+          <br></br><hr></hr>
           <div>
               <div className="selector">
                   <label>n_output colors: </label>
                   <input type='number' step='1' value={n_color_out} onChange={(e)=>{changeOutNum(e)}} style={{width: '3em'}}></input>
-                  <button onClick={addColor}>▼</button><br></br>
+                  <button className="adjust_btn" onClick={addColor}>▼</button><br></br>
                   {colors}
               </div>
               <textarea className="txtarea" value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
@@ -116,11 +122,11 @@ function ColorSelector(props) {
           <span style={{display: "inline-block", width: "3em"}}>{props.rank}. </span>
           {/* <input type="color" value={props.hex} onChange={(e,i)=>props.changeColor(e,i)} style={{width: "5em"}}></input> */}
           <SlColorPicker className='colorpicker' value={props.hex} onSlChange={(e,i)=>props.changeColor(e,i)} />
-          <button onClick={(i)=>props.setBlankColor(i)}>#</button>
-          <button onClick={(i)=>props.swapUp(i)}>↑</button>
-          <button onClick={(i)=>props.swapDown(i)}>↓</button>
-          <button onClick={(i)=>props.addColorDown(i)}>▼</button>
-          <button onClick={(i)=>props.delColor(i)}>X</button>
+          <button className="adjust_btn" onClick={(i)=>props.setBlankColor(i)}>#</button>
+          <button className="adjust_btn" onClick={(i)=>props.swapUp(i)}>↑</button>
+          <button className="adjust_btn" onClick={(i)=>props.swapDown(i)}>↓</button>
+          <button className="adjust_btn" onClick={(i)=>props.addColorDown(i)}>▼</button>
+          <button className="adjust_btn" onClick={(i)=>props.delColor(i)}>X</button>
           <br></br>
       </>
   );
@@ -188,5 +194,21 @@ var gcd = (x, y) => !y ? x : gcd(y, x % y);
 var lcm = (a, b) => (a / gcd(a, b)) * b;
 // 最大公因數
 var findGCD = (nums) => gcd(  Math.max(...nums), Math.min(...nums)  );
+
+function output_function_for_matplotlib(color_out_rgb) {
+    let out_str = ''
+    out_str+='def manual_cmap():\n'
+    out_str+='    import numpy as np\n'
+    out_str+='    from matplotlib.colors import LinearSegmentedColormap\n'
+    out_str+='    colors = [\n'
+    color_out_rgb.map((tmp)=>{
+        out_str+=('        ['+tmp[0]+','+tmp[1]+','+tmp[2]+'],\n')
+    })
+    out_str+='    ]\n'
+    out_str+='    return LinearSegmentedColormap.from_list("manual_cmap",np.array(colors)/255)\n'
+    out_str+='# cmap = manual_cmap()'
+
+    return out_str
+}
 
 export default ColorContainer
