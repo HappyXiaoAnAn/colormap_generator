@@ -4,8 +4,6 @@ import {ColorMaps, DefaultMaps} from "./DefaultMaps.jsx";
 import './App.css'
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
-// import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
-// setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.8.0/cdn/');
 import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const canvas = document.getElementById("canvas");
@@ -100,7 +98,7 @@ function ColorContainer() {
           <DefaultMaps changeMap={(e)=>changeMap(e)} />
           <button popovertarget="my-popover">python code</button>
           <div popover="auto" id="my-popover">
-            <textarea value={python_code}></textarea>
+            <textarea value={python_code} style={{width: "500px", height: "200px"}}></textarea>
           </div>
           <br></br><hr></hr>
           <div>
@@ -110,7 +108,9 @@ function ColorContainer() {
                   <button className="adjust_btn" onClick={addColor}>▼</button><br></br>
                   {colors}
               </div>
-              <textarea className="txtarea" value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
+              <div className="txtarea"><p style={{margin: "0"}}>RGB</p>
+                <textarea value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
+              </div>
           </div>
       </>
   );
