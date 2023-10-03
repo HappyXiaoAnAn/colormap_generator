@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import {ColorMaps, DefaultMaps} from "./DefaultMaps.jsx";
+import {DefaultMaps_2} from "./DefaultMaps_2.jsx"
 import './App.css'
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
@@ -13,10 +14,32 @@ function ColorContainer() {
   const [colormap, setcolormap] = useState(['#ff0000','#ffffff','#0000ff']);
   const [n_color_out, setncolorout] = useState(5)
   
-  function changeMap(e) {
-      setcolormap([...ColorMaps[e.target.value].colormap]);
-      setncolorout(ColorMaps[e.target.value].n_color_out);
+  function read_colormap_file(e) {
+    var file = e.target.files[0];
+    var fr = new FileReader();
+    fr.onload=()=>{
+        let arr_rgba = read_RGBA(fr.result);
+        setcolormap(arr_rgba.map((rgb)=>{return RGBToHex(rgb)}))
+        setncolorout(arr_rgba.length);
+    }
+    fr.readAsText(file);
   }
+  function changeMap_2(e) {
+      let cmapname = e.target.value;
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', './colormap/'+cmapname+'.rgb');
+      xhr.responseType = 'text';
+      xhr.onload = ()=>{
+        let arr_rgba = read_RGBA(xhr.response);
+        setcolormap(arr_rgba.map((rgb)=>{return RGBToHex(rgb)}))
+        setncolorout(arr_rgba.length);
+      }
+      xhr.send();
+  }
+//   function changeMap(e) {
+//       setcolormap([...ColorMaps[e.target.value].colormap]);
+//       setncolorout(ColorMaps[e.target.value].n_color_out);
+//   }
   function addColor() {
       setcolormap(colormap => {
         return ['#ffffff',...colormap]
@@ -95,7 +118,9 @@ function ColorContainer() {
   let python_code = output_function_for_matplotlib(color_out_rgb)
   return (
       <>
-          <DefaultMaps changeMap={(e)=>changeMap(e)} />
+          <input type="file" onChange={(e)=>{read_colormap_file(e)}}></input>
+          <DefaultMaps_2 changeMap={(e)=>changeMap_2(e)} />
+          {/* <DefaultMaps changeMap={(e)=>changeMap(e)} /> */}
           <button popovertarget="my-popover">python code</button>
           <div popover="auto" id="my-popover">
             <textarea value={python_code} style={{width: "500px", height: "200px"}}></textarea>
@@ -195,6 +220,107 @@ var lcm = (a, b) => (a / gcd(a, b)) * b;
 // 最大公因數
 var findGCD = (nums) => gcd(  Math.max(...nums), Math.min(...nums)  );
 
+function RGBToHex(rgb) {
+    // Choose correct separator
+    // let sep = rgb.indexOf(",") > -1 ? "," : " ";
+    // Turn "rgb(r,g,b)" into [r,g,b]
+    // rgb = inp.trim().split(/\s+/);
+    let r = (+rgb[0]).toString(16),
+        g = (+rgb[1]).toString(16),
+        b = (+rgb[2]).toString(16);
+  
+    if (r.length == 1)
+      r = "0" + r;
+    if (g.length == 1)
+      g = "0" + g;
+    if (b.length == 1)
+      b = "0" + b;
+  
+    return "#" + r + g + b;
+}
+function read_RGBA(content) {
+    const lines = content.split('\n');
+    const MAXCOLORS = 1000;
+    const tmpCmap = [];
+    // const tmpCmap = new Array(MAXCOLORS).fill(null).map(() => [0.0, 0.0, 0.0, 0.0]);
+    let numColors = 0;
+    let maxValue = -1.0;
+
+    function isNumerical(s) {
+        return !isNaN(parseFloat(s)) && isFinite(s);
+    }
+
+    for (let i = 0; i < lines.length && numColors < MAXCOLORS; i++) {
+        let line = lines[i].trim();
+        if (line.length === 0) {
+            line = "#"; // Zero-lengthed lines cause issues
+        }
+        const tokens = line.split(/\s+/);
+        if (tokens.length >= 3) {
+            let red = -1.0;
+            let green = -1.0;
+            let blue = -1.0;
+            if (isNumerical(tokens[0])) {
+                red = parseFloat(tokens[0]);
+            }
+            if (isNumerical(tokens[1])) {
+                green = parseFloat(tokens[1]);
+            }
+            if (isNumerical(tokens[2])) {
+                blue = parseFloat(tokens[2]);
+            }
+            let alpha = -1.0;
+            if (tokens.length > 3 && isNumerical(tokens[3])) {
+                alpha = parseFloat(tokens[3]);
+            }
+            if (red >= 0 && green >= 0 && blue >= 0) {
+                let tmpRGBA = [red, green, blue, alpha];
+                tmpCmap.push(tmpRGBA);
+                // tmpCmap[numColors][0] = red;
+                // tmpCmap[numColors][1] = green;
+                // tmpCmap[numColors][2] = blue;
+                // tmpCmap[numColors][3] = alpha;
+                numColors++;
+                if (red > maxValue) {
+                    maxValue = red;
+                }
+                if (green > maxValue) {
+                    maxValue = green;
+                }
+                if (blue > maxValue) {
+                    maxValue = blue;
+                }
+            }
+        }
+    }
+
+    const cmap = new Array(numColors).fill(null).map(() => [0.0, 0.0, 0.0, 0.0]);
+    for (let i = 0; i < numColors; i++) {
+        cmap[i] = tmpCmap[i];
+    }
+
+    if (maxValue <= 1) {
+        for (let i = 0; i < numColors; i++) {
+            cmap[i][3] = cmap[i][3] < 0 ? 1.0 : cmap[i][3];
+        }
+    } else if (maxValue < 256) {
+        for (let i = 0; i < numColors; i++) {
+            cmap[i][3] = cmap[i][3] < 0 ? 255.0 : cmap[i][3];
+            for (let j = 0; j < 3; j++) {
+                // cmap[i][j] /= 255.0;
+            }
+        }
+    } else {
+        for (let i = 0; i < numColors; i++) {
+            cmap[i][3] = cmap[i][3] < 0 ? maxValue : cmap[i][3];
+            for (let j = 0; j < 3; j++) {
+                cmap[i][j] /= maxValue;
+            }
+        }
+    }
+    
+    return cmap;
+}
 function output_function_for_matplotlib(color_out_rgb) {
     let out_str = ''
     out_str+='def manual_cmap():\n'
