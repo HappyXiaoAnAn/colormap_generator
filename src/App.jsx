@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import {ColorMaps, DefaultMaps} from "./DefaultMaps.jsx";
+// import {ColorMaps, DefaultMaps} from "./DefaultMaps.jsx";
 import {DefaultMaps_2} from "./DefaultMaps_2.jsx"
 import './App.css'
 
