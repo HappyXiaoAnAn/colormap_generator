@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 // import {ColorMaps, DefaultMaps} from "./DefaultMaps.jsx";
 import {DefaultMaps_2} from "./DefaultMaps_2.jsx"
+import { ColorOutputText } from './ColorOutputText.jsx'
 import './App.css'
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
@@ -111,10 +112,6 @@ function ColorContainer() {
   const color_in_rgb = colormap.map(tmp=>hexToRgb(tmp))
   const color_out_rgb = interpolate(color_in_rgb, n_color_out)
   Draw(color_out_rgb); // 畫colorbar
-  let color_out_rgb_str = ''; // RGB色碼
-  color_out_rgb.map((tmp)=>{
-      color_out_rgb_str += (tmp[0]+'\t'+tmp[1]+'\t'+tmp[2]+'\n')
-  })
   let python_code = output_function_for_matplotlib(color_out_rgb)
   return (
       <>
@@ -123,7 +120,7 @@ function ColorContainer() {
           {/* <DefaultMaps changeMap={(e)=>changeMap(e)} /> */}
           <button popovertarget="my-popover">python code</button>
           <div popover="auto" id="my-popover">
-            <textarea value={python_code} style={{width: "500px", height: "200px"}}></textarea>
+            <textarea value={python_code} style={{width: "500px", height: "200px"}} readOnly></textarea>
           </div>
           <br></br><hr></hr>
           <div>
@@ -133,9 +130,7 @@ function ColorContainer() {
                   <button className="adjust_btn" onClick={addColor}>▼</button><br></br>
                   {colors}
               </div>
-              <div className="txtarea"><p style={{margin: "0"}}>RGB</p>
-                <textarea value={color_out_rgb_str} rows={color_out_rgb.length+1} cols={25} readOnly></textarea>
-              </div>
+              <ColorOutputText coloroutrgb={color_out_rgb}/>
           </div>
       </>
   );
