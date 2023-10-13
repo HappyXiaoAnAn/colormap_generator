@@ -1,8 +1,9 @@
 import { useState } from 'react'
+import { PythonCode } from './PythonCode'
 
 const colortypes = ["RGB", "Hex"]
 
-export function ColorOutputText(props) {    
+export function ColorOutputText({coloroutrgb}) {    
     const [colortype, setcolortype] = useState('RGB')
     
     function changeColorType(e) {
@@ -11,27 +12,31 @@ export function ColorOutputText(props) {
 
     let color_out_rgb_str = ''; // RGB色碼
     if(colortype === "RGB") {
-        props.coloroutrgb.map((tmp)=>{
+        coloroutrgb.map((tmp)=>{
             color_out_rgb_str += (tmp[0]+'\t'+tmp[1]+'\t'+tmp[2]+'\n')
         })
     }
     if(colortype === "Hex") {
-        props.coloroutrgb.map((tmp)=>{
+        coloroutrgb.map((tmp)=>{
             color_out_rgb_str += (RGBToHex(tmp)+'\n')
         })
     }
-    
+
     return (
         <div className="txtarea">
-            <div><label>output type: 
-            <select title='colortype' onChange={(e)=>changeColorType(e)}>
-                {colortypes.map((colortype, i)=>{
-                    return (
-                        <option key={i}>{colortype}</option>
-                    )
-                })}
-            </select></label></div>
-            <textarea value={color_out_rgb_str} rows={props.coloroutrgb.length+1} cols={25} readOnly style={{resize: 'none'}}></textarea>
+            <div>
+                <label>output type: </label>
+                <select title='colortype' onChange={(e)=>changeColorType(e)}>
+                    {colortypes.map((colortype, i)=>{
+                        return (
+                            <option key={i}>{colortype}</option>
+                        )
+                    })}
+                </select>
+                <PythonCode coloroutrgb={coloroutrgb} />
+            </div>
+
+            <textarea value={color_out_rgb_str} rows={coloroutrgb.length+1} cols={25} readOnly style={{resize: 'none'}}></textarea>
         </div>
     )
 }
