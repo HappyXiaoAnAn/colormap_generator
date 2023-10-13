@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>colormap generator</title>
-    <script type="module" crossorigin src="./assets/index-1b099ebc.js"></script>
-    <link rel="stylesheet" href="./assets/index-1e76754c.css">
+    <script type="module" crossorigin src="./assets/index-18cad6ab.js"></script>
+    <link rel="stylesheet" href="./assets/index-be7434ee.css">
   </head>
   <body style="min-width: 500px;">
     <div style="text-align: center;">
       <h1>Happy</h1>
-      <div style="width: 50px; height: 50px; margin-bottom: 5px; margin-left: auto; margin-right: auto;">
+      <div style="width: 50px; height: 50px; margin-bottom: 5px; margin-left: auto; margin-right: auto;" onclick="showmanual()">
         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50px" height="50px" viewBox="0 0 128 128" enable-background="new 0 0 128 128" xml:space="preserve"> 
           <image id="image0" width="128" height="128"
           href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAAAAADmVT4XAAAABGdBTUEAALGPC/xhBQAAAAJiS0dE
@@ -71,7 +71,7 @@
       MTc6MTU6MzIrMDA6MDBAvnHoAAAAAElFTkSuQmCC" />
       </svg>
     </div>
-      <textarea class="manual" rows="5" cols="25" style="
+      <textarea id="manual" rows="5" cols="25" style="
       text-align: left;
       padding: 10px 10px;
       box-sizing: border-box;
@@ -89,5 +89,15 @@ X: delete color</textarea><br>
     <div id="root">
     </div>
     
+    <script>
+      function showmanual() {
+        var x = document.getElementById("manual");
+        if (x.style.display === "none") {
+          x.style.display = "";
+        } else {
+          x.style.display = "none";
+        }
+      }
+    </script>
   </body>
 </html>
