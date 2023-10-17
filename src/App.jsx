@@ -11,7 +11,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 function ColorContainer() {
-    const [colormap, setcolormap] = useState(['#ff0000','#ffffff','#0000ff']);
+    const [colormap, setcolormap] = useState(['#ff0000','','','#ffffff','#0000ff']);
     const [n_color_out, setncolorout] = useState(5)
     
     function read_colormap_file(e) {

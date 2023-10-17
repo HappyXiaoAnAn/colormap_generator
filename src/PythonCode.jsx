@@ -4,7 +4,10 @@ export function PythonCode({coloroutrgb}) {
     const python_code = output_function_for_matplotlib(coloroutrgb)
     return (
         <>
-            <button popovertarget="my-popover" className='button-64'><span>Python</span></button>
+            {/* <button popovertarget="my-popover" className='button-85'><span>Python</span></button> */}
+            <button popovertarget="my-popover" className='button-85'>
+                <img src='https://matplotlib.org/stable/_static/logo_dark.svg' width={"100px"}/>
+            </button>
             <div popover="auto" id="my-popover">
                 <textarea value={python_code} style={{width: "500px", height: "200px"}} readOnly></textarea>
             </div>

@@ -25,15 +25,17 @@ export function ColorOutputText({coloroutrgb}) {
     return (
         <div className="txtarea">
             <div>
+                <PythonCode coloroutrgb={coloroutrgb} />
+            </div>
+            <div>
                 <label>output type: </label>
                 <select title='colortype' onChange={(e)=>changeColorType(e)}>
                     {colortypes.map((colortype, i)=>{
                         return (
                             <option key={i}>{colortype}</option>
-                        )
-                    })}
+                            )
+                        })}
                 </select>
-                <PythonCode coloroutrgb={coloroutrgb} />
             </div>
 
             <textarea value={color_out_rgb_str} rows={coloroutrgb.length+1} cols={25} readOnly style={{resize: 'none'}}></textarea>
