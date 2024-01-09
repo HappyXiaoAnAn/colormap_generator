@@ -314,6 +314,13 @@ function read_RGBA(content) {
             }
         }
     }
+
+    // round rgb number to integer
+    for (let i = 0; i < numColors; i++) {
+        for (let j = 0; j < 3; j++) {
+            cmap[i][j] = Math.round(cmap[i][j]);
+        }
+    }
     
     return cmap;
 }
