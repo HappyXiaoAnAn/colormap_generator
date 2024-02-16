@@ -13,6 +13,7 @@ const ctx = canvas.getContext("2d");
 function ColorContainer() {
     const [colormap, setcolormap] = useState(['#ff0000','','','#ffffff','#0000ff']);
     const [n_color_out, setncolorout] = useState(5)
+    const [inputnum, setinputnum] = useState(5)
     
     function read_colormap_file(e) {
         var file = e.target.files[0];
@@ -87,7 +88,8 @@ function ColorContainer() {
         setcolormap(colormap_tmp)
     }
     function changeOutNum(e) {
-        const n_color_out = (e.target.value < colormap.length) ? colormap.length : e.target.value;
+        const n_color_out = (e.target.value < colormap.length) ? inputnum : e.target.value;
+        setinputnum(e.target.value);
         e.target.value = n_color_out;
         setncolorout(n_color_out);
     }
@@ -122,7 +124,7 @@ function ColorContainer() {
             <div>
                 <div className="selector">
                     <label>n_output colors: </label>
-                    <input type='number' step='1' value={n_color_out} onChange={(e)=>{changeOutNum(e)}} style={{width: '3em'}}></input>
+                    <input type='number' step='1' value={inputnum} onChange={(e)=>{changeOutNum(e)}} style={{width: '3em'}}></input>
                     <button className="adjust_btn" onClick={addColor}>▼</button><br></br>
                     {colors}
                 </div>
