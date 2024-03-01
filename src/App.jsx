@@ -149,7 +149,7 @@ function ColorContainer() {
     Draw(color_out_rgb); // 畫colorbar
     return (
         <>
-            <button onClick={undo}>↶</button><button onClick={redo}>↷</button>
+            <button title="Undo" onClick={undo}>↶</button><button title="Redo" onClick={redo}>↷</button>
             <br></br>
             <input
                 type="file"
@@ -162,7 +162,7 @@ function ColorContainer() {
                 <div className="selector">
                     <label>n_output colors: </label>
                     <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} style={{width: '3em'}}></input>
-                    <button className="adjust_btn" onClick={addColor}>▼</button><br></br>
+                    <button className="adjust_btn" onClick={addColor} title='add color down'>▼</button><br></br>
                     {colors}
                 </div>
                 <ColorOutputText coloroutrgb={color_out_rgb}/>
@@ -181,11 +181,11 @@ function ColorSelector(props) {
                 onSlChange={(e,i)=>props.changeColor(e,i)} 
                 onSlBlur={props.handleSlBlur}
             />
-            <button className="adjust_btn" onClick={(i)=>props.setBlankColor(i)}>#</button>
-            <button className="adjust_btn" onClick={(i)=>props.swapUp(i)}>↑</button>
-            <button className="adjust_btn" onClick={(i)=>props.swapDown(i)}>↓</button>
-            <button className="adjust_btn" onClick={(i)=>props.addColorDown(i)}>▼</button>
-            <button className="adjust_btn" onClick={(i)=>props.delColor(i)}>X</button>
+            <button className="adjust_btn" onClick={(i)=>props.setBlankColor(i)} title='set color to blank'>#</button>
+            <button className="adjust_btn" onClick={(i)=>props.swapUp(i)} title='swap up'>↑</button>
+            <button className="adjust_btn" onClick={(i)=>props.swapDown(i)} title='swap down'>↓</button>
+            <button className="adjust_btn" onClick={(i)=>props.addColorDown(i)} title='add color down'>▼</button>
+            <button className="adjust_btn" onClick={(i)=>props.delColor(i)} title='delete color'>X</button>
             <br></br>
         </>
     );
