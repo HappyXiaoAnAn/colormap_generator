@@ -69,7 +69,7 @@ function ColorContainer() {
     }
     function changeColor(e,i) {
         let colormap_tmp = [...colormap];
-        colormap_tmp.splice(i,1,e.target.value);
+        colormap_tmp.splice(i,1,e.target.getFormattedValue('hex'));
         if(colormap_tmp[0]=='') colormap_tmp[0]='#ffffff'; // make sure the first color is not null
         if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]='#ffffff'; // make sure the last color is not null
         setcolormap(colormap_tmp)
