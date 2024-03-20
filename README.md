@@ -7,6 +7,7 @@ This is a tool for adjusting colormaps on a web page.
 - Real-time display of changes
 - Automatic generation of matplotlib cmap function
 - Ability to add blank color
+- import color from *.rgb file
 
 ## Usage
 
@@ -16,4 +17,4 @@ https://happyxiaoanan.github.io/colormap_generator/
 
 ### To-Do
 
-* [ ] add feature of import colormap from file.rgb
+* [ ] beautify the interface
