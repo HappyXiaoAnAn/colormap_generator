@@ -158,7 +158,7 @@ function ColorContainer() {
             ></input>
             <DefaultMaps changeMap={(e)=>changeMap(e)} />
             <hr></hr>
-            <div>
+            <div style={{display: 'flex', justifyContent: 'space-around'}}>
                 <div className="selector">
                     <label>n_output colors: </label>
                     <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} style={{width: '3em'}}></input>

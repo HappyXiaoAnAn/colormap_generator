@@ -5,12 +5,12 @@
   text-align: center;
 }
 .selector {
-  position: absolute;
-  left: 0;
+  /* position: absolute; */
+  /* left: 0; */
 }
 .txtarea {
-  position: absolute;
-  right: 0;
+  /* position: absolute; */
+  /* right: 0; */
 }
 .adjust_btn {
   width: 25px;
