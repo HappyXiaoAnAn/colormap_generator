@@ -11,9 +11,9 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 function ColorContainer() {
-    const [history, setHistory] = useState([['#ff0000','','','#ffffff','#0000ff']]);
+    const [history, setHistory] = useState([[[255,0,0],'','',[255,255,255],[0,0,255]]]);
     const [currentstate, setCurrentState] = useState(0);
-    const [colormap, setcolormap] = useState(['#ff0000','','','#ffffff','#0000ff']);
+    const [colormap, setcolormap] = useState([[255,0,0],'','',[255,255,255],[0,0,255]]);
     const [n_color_out, setncolorout] = useState(5)
     const [inputnum, setinputnum] = useState(5)
     
@@ -22,11 +22,10 @@ function ColorContainer() {
         var fr = new FileReader();
         fr.onload=()=>{
             let arr_rgba = read_RGBA(fr.result);
-            let colormap_tmp = arr_rgba.map((rgb)=>{return RGBToHex(rgb)})
-            setcolormap(colormap_tmp)
+            setcolormap(arr_rgba)
             setncolorout(arr_rgba.length);
             setinputnum(arr_rgba.length);
-            addHistory(colormap_tmp)
+            addHistory(arr_rgba)
         }
         fr.readAsText(file);
     }
@@ -37,23 +36,22 @@ function ColorContainer() {
         xhr.responseType = 'text';
         xhr.onload = ()=>{
             let arr_rgba = read_RGBA(xhr.response);
-            let colormap_tmp = arr_rgba.map((rgb)=>{return RGBToHex(rgb)})
-            setcolormap(colormap_tmp)
+            setcolormap(arr_rgba)
             setncolorout(arr_rgba.length);
             setinputnum(arr_rgba.length);
-            addHistory(colormap_tmp)
+            addHistory(arr_rgba)
         }
         xhr.send();
     }
     function addColor() {
-        let colormap_tmp = ['#ffffff',...colormap]
+        let colormap_tmp = [[255,255,255],...colormap]
         setcolormap(colormap_tmp)
         addHistory(colormap_tmp)
     }
     function addColorDown(i) {
         let colormap_tmp = [...colormap];
         colormap_tmp.splice(i+1,0,'');
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]='#ffffff'; // make sure the last color is not null
+        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
         setcolormap(colormap_tmp)
         if (n_color_out < colormap_tmp.length) setncolorout(colormap_tmp.length);
         addHistory(colormap_tmp)
@@ -62,16 +60,16 @@ function ColorContainer() {
         if(colormap.length==2) return;
         let colormap_tmp = [...colormap];
         colormap_tmp.splice(i,1);
-        if(colormap_tmp[0]=='') colormap_tmp[0]='#ffffff'; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]='#ffffff'; // make sure the last color is not null
+        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
+        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
         setcolormap(colormap_tmp)
         addHistory(colormap_tmp)
     }
     function changeColor(e,i) {
         let colormap_tmp = [...colormap];
-        colormap_tmp.splice(i,1,e.target.getFormattedValue('hex'));
-        if(colormap_tmp[0]=='') colormap_tmp[0]='#ffffff'; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]='#ffffff'; // make sure the last color is not null
+        colormap_tmp.splice(i,1,e.target.getFormattedValue('rgb'));
+        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
+        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
         setcolormap(colormap_tmp)
     }
     function setBlankColor(i) {
@@ -86,8 +84,8 @@ function ColorContainer() {
         if(i==0) return;
         let colormap_tmp = [...colormap];
         colormap_tmp[i-1] = colormap_tmp.splice(i,1,colormap_tmp[i-1])[0];
-        if(colormap_tmp[0]=='') colormap_tmp[0]='#ffffff'; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]='#ffffff'; // make sure the last color is not null
+        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
+        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
         setcolormap(colormap_tmp)
         addHistory(colormap_tmp)
     }
@@ -95,15 +93,14 @@ function ColorContainer() {
         if(i===colormap.length-1) return;
         let colormap_tmp = [...colormap];
         colormap_tmp[i+1] = colormap_tmp.splice(i,1,colormap_tmp[i+1])[0];
-        if(colormap_tmp[0]=='') colormap_tmp[0]='#ffffff'; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]='#ffffff'; // make sure the last color is not null
+        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
+        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
         setcolormap(colormap_tmp)
         addHistory(colormap_tmp)
     }
     function changeOutNum(e) {
         const n_color_out = (e.target.value < colormap.length) ? inputnum : e.target.value;
         setinputnum(e.target.value);
-        e.target.value = n_color_out;
         setncolorout(n_color_out);
     }
     function addHistory(colormap_tmp) {
@@ -132,7 +129,7 @@ function ColorContainer() {
         return (
             <ColorSelector
                 key={i}
-                hex={color}
+                rgb={color}
                 rank={i+1}
                 setBlankColor={()=>setBlankColor(i)}
                 swapUp={()=>swapUp(i)}
@@ -144,7 +141,7 @@ function ColorContainer() {
             />
         )
     })
-    const color_in_rgb = colormap.map(tmp=>hexToRgb(tmp))
+    const color_in_rgb = colormap;
     const color_out_rgb = interpolate(color_in_rgb, n_color_out)
     Draw(color_out_rgb); // 畫colorbar
     return (
@@ -177,7 +174,9 @@ function ColorSelector(props) {
         <>
             <span style={{display: "inline-block", width: "3em"}}>{props.rank}. </span>
             {/* <input type="color" value={props.hex} onChange={(e,i)=>props.changeColor(e,i)} style={{width: "5em"}}></input> */}
-            <SlColorPicker className='colorpicker' value={props.hex} 
+            <SlColorPicker className='colorpicker'
+                value={props.rgb=='' ? '' : 'rgb('+props.rgb[0]+','+props.rgb[1]+','+props.rgb[2]+')'}
+                format="rgb"
                 onSlChange={(e,i)=>props.changeColor(e,i)} 
                 onSlBlur={props.handleSlBlur}
             />
