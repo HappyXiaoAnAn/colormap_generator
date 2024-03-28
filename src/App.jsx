@@ -67,7 +67,7 @@ function ColorContainer() {
     }
     function changeColor(e,i) {
         let colormap_tmp = [...colormap];
-        colormap_tmp.splice(i,1,e.target.getFormattedValue('rgb'));
+        colormap_tmp.splice(i,1,e.target.getFormattedValue('rgb').substr(4).split(")")[0].split(",").map((str)=>{return parseInt(str)}));
         if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
         if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
         setcolormap(colormap_tmp)
