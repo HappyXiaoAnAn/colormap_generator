@@ -103,6 +103,11 @@ function ColorContainer() {
         setinputnum(e.target.value);
         setncolorout(n_color_out);
     }
+    function handleBlur(e) {
+        const n_color_out = (e.target.value < colormap.length) ? colormap.length : e.target.value;
+        setinputnum(n_color_out);
+        setncolorout(n_color_out);
+    }
     function addHistory(colormap_tmp) {
         const nextHistory = [...history.slice(0, currentstate + 1), colormap_tmp];
         setHistory(nextHistory);
@@ -158,7 +163,7 @@ function ColorContainer() {
             <div style={{display: 'flex', justifyContent: 'space-around'}}>
                 <div className="selector">
                     <label>n_output colors: </label>
-                    <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} style={{width: '3em'}}></input>
+                    <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} onBlur={(e)=>handleBlur(e)} style={{width: '3em'}}></input>
                     <button className="adjust_btn" onClick={addColor} title='add color down'>▼</button><br></br>
                     {colors}
                 </div>
