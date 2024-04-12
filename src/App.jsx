@@ -181,7 +181,7 @@ function ColorSelector(props) {
             {/* <input type="color" value={props.hex} onChange={(e,i)=>props.changeColor(e,i)} style={{width: "5em"}}></input> */}
             <SlColorPicker className='colorpicker'
                 value={props.rgb=='' ? '' : 'rgb('+props.rgb[0]+','+props.rgb[1]+','+props.rgb[2]+')'}
-                format="rgb"
+                // format="rgb"
                 onSlChange={(e,i)=>props.changeColor(e,i)} 
                 onSlBlur={props.handleSlBlur}
             />
