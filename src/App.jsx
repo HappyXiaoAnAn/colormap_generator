@@ -2,13 +2,12 @@ import React from 'react'
 import { useState } from 'react'
 import {DefaultMaps} from "./DefaultMaps.jsx"
 import { ColorOutputText } from './ColorOutputText.jsx'
+import { PreviewColorbar } from './PreviewColorbar.jsx'
 import './App.css'
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
 
 function ColorContainer() {
     const [history, setHistory] = useState([[[255,0,0],'','',[255,255,255],[0,0,255]]]);
@@ -148,9 +147,10 @@ function ColorContainer() {
     })
     const color_in_rgb = colormap;
     const color_out_rgb = interpolate(color_in_rgb, n_color_out)
-    Draw(color_out_rgb); // 畫colorbar
+    
     return (
         <>
+            <PreviewColorbar color_out_rgb={color_out_rgb}/>
             <button title="Undo" onClick={undo}>↶</button><button title="Redo" onClick={redo}>↷</button>
             <br></br>
             <input
@@ -195,24 +195,6 @@ function ColorSelector(props) {
     );
 } // ColorSelector
 
-// 畫colorbar
-function Draw(color_out) {
-    ctx.clearRect(0,0,500,100);
-    ctx.beginPath();
-    ctx.rect(50, 30, 400, 40);
-    ctx.stroke();
-    
-    for (let i = 0; i < color_out.length; i++) {
-        const color_str = 'rgb('+color_out[i][0]+','+color_out[i][1]+','+color_out[i][2]+')';
-        const px = 50+i*400/color_out.length;
-        DrawRect(color_str,px, 30, 400/color_out.length, 40);
-    }
-}
-// 畫colorbar色塊
-function DrawRect(color, x, y, width, height) {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, width, height);
-}
 // 內插顏色
 function interpolate(arr, n_color_out) {
     // console.log(nn,a,b)
@@ -243,39 +225,12 @@ function interpolate(arr, n_color_out) {
     }
     return result;
 }
-// 色碼轉換
-function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [
-        parseInt(result[1], 16),
-        parseInt(result[2], 16),
-        parseInt(result[3], 16)
-    ] : null;
-}
 var gcd = (x, y) => !y ? x : gcd(y, x % y);
 // 最小公倍數
 var lcm = (a, b) => (a / gcd(a, b)) * b;
 // 最大公因數
 var findGCD = (nums) => gcd(  Math.max(...nums), Math.min(...nums)  );
 
-function RGBToHex(rgb) {
-    // Choose correct separator
-    // let sep = rgb.indexOf(",") > -1 ? "," : " ";
-    // Turn "rgb(r,g,b)" into [r,g,b]
-    // rgb = inp.trim().split(/\s+/);
-    let r = (+rgb[0]).toString(16),
-        g = (+rgb[1]).toString(16),
-        b = (+rgb[2]).toString(16);
-  
-    if (r.length == 1)
-      r = "0" + r;
-    if (g.length == 1)
-      g = "0" + g;
-    if (b.length == 1)
-      b = "0" + b;
-  
-    return "#" + r + g + b;
-}
 function read_RGBA(content) {
     const lines = content.split('\n');
     const MAXCOLORS = 1000;
