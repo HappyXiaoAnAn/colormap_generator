@@ -127,3 +127,7 @@
   color: CanvasText;
   background-color: Canvas;
 }
+
+.code-area::part(textarea) {
+  font-family: monospace;
+}
