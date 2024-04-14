@@ -1,7 +1,12 @@
 import React, { useRef, useEffect } from 'react'
 
 export function PreviewColorbar(props) {
-  
+    const colorbar = {
+        position: 'sticky',
+        top: 0,
+        zIndex: 100
+    }
+
     const canvasRef = useRef(null)
     
     useEffect(() => {
@@ -10,7 +15,7 @@ export function PreviewColorbar(props) {
         Draw(ctx, props.color_out_rgb)
     })
 
-    return <canvas ref={canvasRef} height="100" width="500"/>
+    return <canvas ref={canvasRef} height="100" width="500" style={colorbar}/>
 }
 
 
