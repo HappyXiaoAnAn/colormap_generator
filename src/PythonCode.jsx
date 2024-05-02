@@ -2,6 +2,10 @@ import './button.css'
 import { useState, useRef, useEffect } from "react";
 import SlDialog from '@shoelace-style/shoelace/dist/react/dialog';
 import SlTextarea from '@shoelace-style/shoelace/dist/react/textarea';
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
+setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.14.0/cdn/')
+// import SlIconButton from '@shoelace-style/shoelace/dist/react/icon-button';
+import SlCopyButtonAdjust from './SlCopyButtonAdjust.js';
 
 export function PythonCode({coloroutrgb}) {
     const [visible, setVisible] = useState(false);
@@ -13,8 +17,14 @@ export function PythonCode({coloroutrgb}) {
             <button className='button-85' onClick={() => setVisible(true)}>
                 <img src='https://matplotlib.org/stable/_static/logo_dark.svg' width={"100px"}/>
             </button>
-            
+
             <SlDialog label='Python code' open={visible}  onSlAfterHide={() => setVisible(false)} style={{'--width':'100%', textAlign: "left"}}>
+                <SlCopyButtonAdjust
+                    slot='header-actions'
+                    style={{flex:"0 0 auto", display:"flex", alignItems:"center", fontSize:"var(--sl-font-size-medium)"}}
+                    value={python_code}>
+                </SlCopyButtonAdjust>
+                {/* <SlIconButton slot='header-actions' name='copy'></SlIconButton> */}
                 <SlTextarea className='code-area' value={python_code} rows={15} size='small' readOnly></SlTextarea>
             </SlDialog>
         </>
