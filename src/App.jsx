@@ -7,6 +7,9 @@ import './App.css'
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
+import SlInput from '@shoelace-style/shoelace/dist/react/input';
+import SlButton from '@shoelace-style/shoelace/dist/react/button'
+import SlButtonGroup from '@shoelace-style/shoelace/dist/react/button-group'
 
 
 function ColorContainer() {
@@ -151,7 +154,7 @@ function ColorContainer() {
     return (
         <>
             <PreviewColorbar color_out_rgb={color_out_rgb}/>
-            <button title="Undo" onClick={undo}>↶</button><button title="Redo" onClick={redo}>↷</button>
+            <SlButton size='small' title="Undo" onClick={undo}>↶</SlButton><SlButton size='small' title="Redo" onClick={redo}>↷</SlButton>
             <br></br>
             <input
                 type="file"
@@ -164,7 +167,7 @@ function ColorContainer() {
                 <div className="selector">
                     <label>n_output colors: </label>
                     <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} onBlur={(e)=>handleBlur(e)} style={{width: '3em'}}></input>
-                    <button className="adjust_btn" onClick={addColor} title='add color down'>▼</button><br></br>
+                    <SlButton size='small' onClick={addColor} title='add color down'>▼</SlButton><br></br>
                     {colors}
                 </div>
                 <ColorOutputText coloroutrgb={color_out_rgb}/>
@@ -176,22 +179,24 @@ function ColorContainer() {
 // 色塊
 function ColorSelector(props) {
     return (
-        <>
-            <span style={{display: "inline-block", width: "3em"}}>{props.rank}. </span>
+        <div style={{flex: "0 0 auto", display: "flex", alignItems:"center", padding:"1px"}}>
+            <span style={{display: "inline-block", width: "2em"}}>{props.rank}.</span>
             {/* <input type="color" value={props.hex} onChange={(e,i)=>props.changeColor(e,i)} style={{width: "5em"}}></input> */}
-            <SlColorPicker className='colorpicker'
+            <SlColorPicker size='small'
                 value={props.rgb=='' ? '' : 'rgb('+props.rgb[0]+','+props.rgb[1]+','+props.rgb[2]+')'}
                 // format="rgb"
                 onSlChange={(e,i)=>props.changeColor(e,i)} 
                 onSlBlur={props.handleSlBlur}
             />
-            <button className="adjust_btn" onClick={(i)=>props.setBlankColor(i)} title='set color to blank'>#</button>
-            <button className="adjust_btn" onClick={(i)=>props.swapUp(i)} title='swap up'>↑</button>
-            <button className="adjust_btn" onClick={(i)=>props.swapDown(i)} title='swap down'>↓</button>
-            <button className="adjust_btn" onClick={(i)=>props.addColorDown(i)} title='add color down'>▼</button>
-            <button className="adjust_btn" onClick={(i)=>props.delColor(i)} title='delete color'>X</button>
+            <SlButtonGroup>
+                <SlButton size="small" onClick={(i)=>props.setBlankColor(i)} title='set color to blank'>#</SlButton>
+                <SlButton size="small" onClick={(i)=>props.swapUp(i)} title='swap up'>↑</SlButton>
+                <SlButton size="small" onClick={(i)=>props.swapDown(i)} title='swap down'>↓</SlButton>
+                <SlButton size="small" onClick={(i)=>props.addColorDown(i)} title='add color down'>▼</SlButton>
+                <SlButton size="small" onClick={(i)=>props.delColor(i)} title='delete color'>X</SlButton>
+            </SlButtonGroup>
             <br></br>
-        </>
+        </div>
     );
 } // ColorSelector
 
