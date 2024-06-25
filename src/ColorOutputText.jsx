@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { PythonCode } from './PythonCode'
+import SlCopyButtonAdjust from './copy-button-adjust/SlCopyButtonAdjust.js';
 
 const colortypes = ["RGB", "Hex"]
 
 export function ColorOutputText({coloroutrgb}) {    
     const [colortype, setcolortype] = useState('RGB')
+    const [sep, setsep] = useState(',')
     
     function changeColorType(e) {
         setcolortype(e.target.value)
@@ -13,7 +15,7 @@ export function ColorOutputText({coloroutrgb}) {
     let color_out_rgb_str = ''; // RGB色碼
     if(colortype === "RGB") {
         coloroutrgb.map((tmp)=>{
-            color_out_rgb_str += (tmp[0]+'\t'+tmp[1]+'\t'+tmp[2]+'\n')
+            color_out_rgb_str += (tmp[0]+sep+tmp[1]+sep+tmp[2]+'\n')
         })
     }
     if(colortype === "Hex") {
@@ -21,6 +23,7 @@ export function ColorOutputText({coloroutrgb}) {
             color_out_rgb_str += (RGBToHex(tmp)+'\n')
         })
     }
+    const tab = '\t'
 
     return (
         <div className="txtarea">
@@ -36,9 +39,18 @@ export function ColorOutputText({coloroutrgb}) {
                             )
                         })}
                 </select>
+                <br></br>
+                <label>separator: </label>
+                <select title='separator' onChange={(e)=>setsep(e.target.value)}>
+                    <option value=','>,</option>
+                    <option value={tab}>tab</option>
+                    <option value=' '>space</option>
+                </select>
             </div>
-
-            <textarea value={color_out_rgb_str} rows={coloroutrgb.length+1} cols={25} readOnly style={{resize: 'none'}}></textarea>
+            <div style={{position: "relative"}}>
+                <SlCopyButtonAdjust value={color_out_rgb_str} style={{position: "absolute", right: "0"}}/>
+                <textarea value={color_out_rgb_str} rows={coloroutrgb.length+1} cols={25} readOnly style={{resize: 'none'}}></textarea>
+            </div>
         </div>
     )
 }

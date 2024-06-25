@@ -1,8 +1,8 @@
-import { ShoelaceElement } from "@shoelace-style/shoelace/dist/chunks/chunk.Z7XDKKOD";
+import { ShoelaceElement } from "./shoelace-element.js";
 import { copy_button_styles_default } from './CopyButton_default_style.js'
-import { __decorateClass } from "@shoelace-style/shoelace/dist/chunks/chunk.6M63UXML";
+import { __decorateClass } from "./decorator.js";
 import { getAnimation, setDefaultAnimation } from '@shoelace-style/shoelace/dist/utilities/animation-registry.js';
-import { LocalizeController } from '@shoelace-style/shoelace/dist/chunks/chunk.2A3352EO'
+import { LocalizeController } from '@shoelace-style/localize';
 
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
 setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.14.0/cdn/')
@@ -151,9 +151,9 @@ var SlCopyButtonAdjust = class extends ShoelaceElement {
     }
 };
 SlCopyButtonAdjust.styles = copy_button_styles_default;
-SlCopyButtonAdjust.dependencies = {
-  "sl-icon": SlIcon,
-};
+// SlCopyButtonAdjust.dependencies = {
+//   "sl-icon": SlIcon,
+// };
 __decorateClass([
   query(".copy-button")
 ], SlCopyButtonAdjust.prototype, "button", 2);
