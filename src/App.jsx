@@ -7,9 +7,10 @@ import './App.css'
 
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
-import SlInput from '@shoelace-style/shoelace/dist/react/input';
 import SlButton from '@shoelace-style/shoelace/dist/react/button'
 import SlButtonGroup from '@shoelace-style/shoelace/dist/react/button-group'
+import SlTooltip from '@shoelace-style/shoelace/dist/react/tooltip'
+import SlIcon from '@shoelace-style/shoelace/dist/react/icon'
 
 
 function ColorContainer() {
@@ -145,6 +146,8 @@ function ColorContainer() {
                 addColorDown={()=>addColorDown(i)}
                 delColor={()=>delColor(i)}
                 handleSlBlur={handleSlBlur}
+                colorid={i}
+                ncolor={colormap.length}
             />
         )
     })
@@ -154,7 +157,10 @@ function ColorContainer() {
     return (
         <>
             <PreviewColorbar color_out_rgb={color_out_rgb}/>
-            <SlButton size='small' title="Undo" onClick={undo}>↶</SlButton><SlButton size='small' title="Redo" onClick={redo}>↷</SlButton>
+            <SlButtonGroup>
+                <SlTooltip content="Undo"><SlButton size='small' onClick={undo} disabled={currentstate==0}>↶</SlButton></SlTooltip>
+                <SlTooltip content="Redo"><SlButton size='small' onClick={redo} disabled={currentstate==history.length-1}>↷</SlButton></SlTooltip>
+            </SlButtonGroup>
             <br></br>
             <input
                 type="file"
@@ -167,7 +173,7 @@ function ColorContainer() {
                 <div className="selector">
                     <label>n_output colors: </label>
                     <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} onBlur={(e)=>handleBlur(e)} style={{width: '3em'}}></input>
-                    <SlButton size='small' onClick={addColor} title='add color down'>▼</SlButton><br></br>
+                    <SlTooltip content="add color down"><SlButton size='small' onClick={addColor} title='add color down'><SlIcon name="plus-square-fill"></SlIcon></SlButton></SlTooltip><br></br>
                     {colors}
                 </div>
                 <ColorOutputText coloroutrgb={color_out_rgb}/>
@@ -189,11 +195,21 @@ function ColorSelector(props) {
                 onSlBlur={props.handleSlBlur}
             />
             <SlButtonGroup>
-                <SlButton size="small" onClick={(i)=>props.setBlankColor(i)} title='set color to blank'>#</SlButton>
-                <SlButton size="small" onClick={(i)=>props.swapUp(i)} title='swap up'>↑</SlButton>
-                <SlButton size="small" onClick={(i)=>props.swapDown(i)} title='swap down'>↓</SlButton>
-                <SlButton size="small" onClick={(i)=>props.addColorDown(i)} title='add color down'>▼</SlButton>
-                <SlButton size="small" onClick={(i)=>props.delColor(i)} title='delete color'>X</SlButton>
+                <SlTooltip content="set color to blank">
+                    <SlButton size="small" onClick={(i)=>props.setBlankColor(i)} disabled={props.colorid==0 || props.colorid==props.ncolor-1}>#</SlButton>
+                </SlTooltip>
+                <SlTooltip content="swap up">
+                    <SlButton size="small" onClick={(i)=>props.swapUp(i)} disabled={props.colorid==0}>▲</SlButton>
+                </SlTooltip>
+                <SlTooltip content="swap down">
+                    <SlButton size="small" onClick={(i)=>props.swapDown(i)} disabled={props.colorid==props.ncolor-1}>▼</SlButton>
+                </SlTooltip>
+                <SlTooltip content="add color down">
+                    <SlButton size="small" onClick={(i)=>props.addColorDown(i)}><SlIcon name="plus-square-fill"></SlIcon></SlButton>
+                </SlTooltip>
+                <SlTooltip content="delete color">
+                    <SlButton size="small" onClick={(i)=>props.delColor(i)}>X</SlButton>
+                </SlTooltip>
             </SlButtonGroup>
             <br></br>
         </div>
