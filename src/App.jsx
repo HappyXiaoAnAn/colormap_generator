@@ -191,7 +191,7 @@ function ColorSelector(props) {
             <SlColorPicker size='small'
                 value={props.rgb=='' ? '' : 'rgb('+props.rgb[0]+','+props.rgb[1]+','+props.rgb[2]+')'}
                 // format="rgb"
-                onSlChange={(e,i)=>props.changeColor(e,i)} 
+                onSlInput={(e,i)=>props.changeColor(e,i)} 
                 onSlBlur={props.handleSlBlur}
             />
             <SlButtonGroup>

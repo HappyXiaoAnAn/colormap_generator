@@ -13,8 +13,8 @@ import { html } from "lit";
 import { property, query, state } from "lit/decorators.js";
 
 import * as React from "react";
-import { createComponent } from "@lit-labs/react";
-import "@lit-labs/react";
+import { createComponent } from "@lit/react";
+import "@lit/react";
 
 var SlCopyButtonAdjust = class extends ShoelaceElement {
     constructor() {
