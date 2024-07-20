@@ -106,6 +106,10 @@ function ColorContainer() {
         setinputnum(e.target.value);
         setncolorout(n_color_out);
     }
+    function resetOutNum(e) {
+        setinputnum(colormap.length);
+        setncolorout(colormap.length);
+    }
     function handleBlur(e) {
         const n_color_out = (e.target.value < colormap.length) ? colormap.length : e.target.value;
         setinputnum(n_color_out);
@@ -171,9 +175,12 @@ function ColorContainer() {
             <hr></hr>
             <div style={{display: 'flex', justifyContent: 'space-around'}}>
                 <div className="selector">
-                    <label>n_output colors: </label>
+                    <label>n_colors: </label>
                     <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} onBlur={(e)=>handleBlur(e)} style={{width: '3em'}}></input>
-                    <SlTooltip content="add color down"><SlButton size='small' onClick={addColor} title='add color down'><SlIcon name="plus-square-fill"></SlIcon></SlButton></SlTooltip><br></br>
+                    <SlButtonGroup>
+                    <SlTooltip content="reset"><SlButton size='small' onClick={resetOutNum} title='reset'><SlIcon name="arrow-repeat"></SlIcon></SlButton></SlTooltip>
+                    <SlTooltip content="add color down"><SlButton size='small' onClick={addColor} title='add color down'><SlIcon name="plus-square-fill"></SlIcon></SlButton></SlTooltip>
+                    </SlButtonGroup>
                     {colors}
                 </div>
                 <ColorOutputText coloroutrgb={color_out_rgb}/>
