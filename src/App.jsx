@@ -183,7 +183,11 @@ function ColorContainer() {
                     </SlButtonGroup>
                     {colors}
                 </div>
-                <ColorOutputText coloroutrgb={color_out_rgb}/>
+                <ColorOutputText
+                    colorinrgb={color_in_rgb}
+                    coloroutrgb={color_out_rgb}
+                    setcolormap={setcolormap}
+                    addHistory={addHistory}/>
             </div>
         </>
     );
