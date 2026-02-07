@@ -15,126 +15,126 @@ import SlIcon from '@shoelace-style/shoelace/dist/react/icon'
 
 function ColorContainer() {
     const [history, setHistory] = useState([[[255,0,0],'','',[255,255,255],[0,0,255]]]);
-    const [currentstate, setCurrentState] = useState(0);
-    const [colormap, setcolormap] = useState([[255,0,0],'','',[255,255,255],[0,0,255]]);
-    const [n_color_out, setncolorout] = useState(5)
-    const [inputnum, setinputnum] = useState(5)
+    const [currentState, setCurrentState] = useState(0);
+    const [colormap, setColormap] = useState([[255,0,0],'','',[255,255,255],[0,0,255]]);
+    const [numColorsOut, setNumColorsOut] = useState(5)
+    const [inputNum, setInputNum] = useState(5)
     
-    function read_colormap_file(e) {
-        var file = e.target.files[0];
-        var fr = new FileReader();
-        fr.onload=()=>{
-            let arr_rgba = read_RGBA(fr.result);
-            setcolormap(arr_rgba)
-            setncolorout(arr_rgba.length);
-            setinputnum(arr_rgba.length);
-            addHistory(arr_rgba)
+    function handleColormapFileRead(e) {
+        const file = e.target.files[0];
+        const fileReader = new FileReader();
+        fileReader.onload=()=>{
+            const colormapData = parseRGBAData(fileReader.result);
+            setColormap(colormapData)
+            setNumColorsOut(colormapData.length);
+            setInputNum(colormapData.length);
+            addHistory(colormapData)
         }
-        fr.readAsText(file);
+        fileReader.readAsText(file);
     }
-    function changeMap(e) {
-        let cmapname = e.target.value;
+    function handleMapChange(e) {
+        const mapName = e.target.value;
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', './colormap/'+cmapname+'.rgb');
+        xhr.open('GET', './colormap/'+mapName+'.rgb');
         xhr.responseType = 'text';
         xhr.onload = ()=>{
-            let arr_rgba = read_RGBA(xhr.response);
-            setcolormap(arr_rgba)
-            setncolorout(arr_rgba.length);
-            setinputnum(arr_rgba.length);
-            addHistory(arr_rgba)
+            const colormapData = parseRGBAData(xhr.response);
+            setColormap(colormapData)
+            setNumColorsOut(colormapData.length);
+            setInputNum(colormapData.length);
+            addHistory(colormapData)
         }
         xhr.send();
     }
-    function addColor() {
-        let colormap_tmp = [[255,255,255],...colormap]
-        setcolormap(colormap_tmp)
-        addHistory(colormap_tmp)
+    function handleAddColor() {
+        const updatedColormap = [[255,255,255],...colormap]
+        setColormap(updatedColormap)
+        addHistory(updatedColormap)
     }
-    function addColorDown(i) {
-        let colormap_tmp = [...colormap];
-        colormap_tmp.splice(i+1,0,'');
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
-        setcolormap(colormap_tmp)
-        if (n_color_out < colormap_tmp.length) setncolorout(colormap_tmp.length);
-        addHistory(colormap_tmp)
+    function handleAddColorDown(i) {
+        const updatedColormap = [...colormap];
+        updatedColormap.splice(i+1,0,'');
+        if(updatedColormap[updatedColormap.length-1]=='') updatedColormap[updatedColormap.length-1]=[255,255,255]; // Ensure last color is not null
+        setColormap(updatedColormap)
+        if (numColorsOut < updatedColormap.length) setNumColorsOut(updatedColormap.length);
+        addHistory(updatedColormap)
     }
-    function delColor(i) {
+    function handleDeleteColor(i) {
         if(colormap.length==2) return;
-        let colormap_tmp = [...colormap];
-        colormap_tmp.splice(i,1);
-        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
-        setcolormap(colormap_tmp)
-        addHistory(colormap_tmp)
+        const updatedColormap = [...colormap];
+        updatedColormap.splice(i,1);
+        if(updatedColormap[0]=='') updatedColormap[0]=[255,255,255]; // Ensure first color is not null
+        if(updatedColormap[updatedColormap.length-1]=='') updatedColormap[updatedColormap.length-1]=[255,255,255]; // Ensure last color is not null
+        setColormap(updatedColormap)
+        addHistory(updatedColormap)
     }
-    function changeColor(e,i) {
-        let colormap_tmp = [...colormap];
-        colormap_tmp.splice(i,1,e.target.getFormattedValue('rgb').substr(4).split(")")[0].split(",").map((str)=>{return parseInt(str)}));
-        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
-        setcolormap(colormap_tmp)
+    function handleColorChange(e,i) {
+        const updatedColormap = [...colormap];
+        updatedColormap.splice(i,1,e.target.getFormattedValue('rgb').substr(4).split(")")[0].split(",").map((str)=>{return parseInt(str)}));
+        if(updatedColormap[0]=='') updatedColormap[0]=[255,255,255]; // Ensure first color is not null
+        if(updatedColormap[updatedColormap.length-1]=='') updatedColormap[updatedColormap.length-1]=[255,255,255]; // Ensure last color is not null
+        setColormap(updatedColormap)
     }
-    function setBlankColor(i) {
-        if(i===0) return; // make sure the first color is not null
-        if(i===colormap.length-1) return; // make sure the first color is not null
-        let colormap_tmp = [...colormap];
-        colormap_tmp.splice(i,1,'');
-        setcolormap(colormap_tmp)
-        addHistory(colormap_tmp)
+    function handleSetBlankColor(i) {
+        if(i===0) return; // Ensure first color is not null
+        if(i===colormap.length-1) return; // Ensure last color is not null
+        const updatedColormap = [...colormap];
+        updatedColormap.splice(i,1,'');
+        setColormap(updatedColormap)
+        addHistory(updatedColormap)
     }
-    function swapUp(i) {
+    function handleSwapUp(i) {
         if(i==0) return;
-        let colormap_tmp = [...colormap];
-        colormap_tmp[i-1] = colormap_tmp.splice(i,1,colormap_tmp[i-1])[0];
-        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
-        setcolormap(colormap_tmp)
-        addHistory(colormap_tmp)
+        const updatedColormap = [...colormap];
+        updatedColormap[i-1] = updatedColormap.splice(i,1,updatedColormap[i-1])[0];
+        if(updatedColormap[0]=='') updatedColormap[0]=[255,255,255]; // Ensure first color is not null
+        if(updatedColormap[updatedColormap.length-1]=='') updatedColormap[updatedColormap.length-1]=[255,255,255]; // Ensure last color is not null
+        setColormap(updatedColormap)
+        addHistory(updatedColormap)
     }
-    function swapDown(i) {
+    function handleSwapDown(i) {
         if(i===colormap.length-1) return;
-        let colormap_tmp = [...colormap];
-        colormap_tmp[i+1] = colormap_tmp.splice(i,1,colormap_tmp[i+1])[0];
-        if(colormap_tmp[0]=='') colormap_tmp[0]=[255,255,255]; // make sure the first color is not null
-        if(colormap_tmp[colormap_tmp.length-1]=='') colormap_tmp[colormap_tmp.length-1]=[255,255,255]; // make sure the last color is not null
-        setcolormap(colormap_tmp)
-        addHistory(colormap_tmp)
+        const updatedColormap = [...colormap];
+        updatedColormap[i+1] = updatedColormap.splice(i,1,updatedColormap[i+1])[0];
+        if(updatedColormap[0]=='') updatedColormap[0]=[255,255,255]; // Ensure first color is not null
+        if(updatedColormap[updatedColormap.length-1]=='') updatedColormap[updatedColormap.length-1]=[255,255,255]; // Ensure last color is not null
+        setColormap(updatedColormap)
+        addHistory(updatedColormap)
     }
-    function changeOutNum(e) {
-        const n_color_out = (e.target.value < colormap.length) ? inputnum : e.target.value;
-        setinputnum(e.target.value);
-        setncolorout(n_color_out);
+    function handleNumColorsChange(e) {
+        const numColors = (e.target.value < colormap.length) ? inputNum : e.target.value;
+        setInputNum(e.target.value);
+        setNumColorsOut(numColors);
     }
-    function resetOutNum(e) {
-        setinputnum(colormap.length);
-        setncolorout(colormap.length);
+    function handleResetNumColors(e) {
+        setInputNum(colormap.length);
+        setNumColorsOut(colormap.length);
     }
-    function handleBlur(e) {
-        const n_color_out = (e.target.value < colormap.length) ? colormap.length : e.target.value;
-        setinputnum(n_color_out);
-        setncolorout(n_color_out);
+    function handleNumColorsBlur(e) {
+        const numColors = (e.target.value < colormap.length) ? colormap.length : e.target.value;
+        setInputNum(numColors);
+        setNumColorsOut(numColors);
     }
-    function addHistory(colormap_tmp) {
-        const nextHistory = [...history.slice(0, currentstate + 1), colormap_tmp];
+    function addHistory(colormapData) {
+        const nextHistory = [...history.slice(0, currentState + 1), colormapData];
         setHistory(nextHistory);
         setCurrentState(nextHistory.length-1)
     }
-    function handleSlBlur() {
-        let colormap_tmp = [...colormap];
-        addHistory(colormap_tmp)
+    function handleColorPickerBlur() {
+        const updatedColormap = [...colormap];
+        addHistory(updatedColormap)
     }
-    function undo() {
-        if(currentstate==0) return;
-        let colormap_tmp = history[currentstate-1];
-        setcolormap(colormap_tmp);
-        setCurrentState(currentstate-1)
+    function handleUndo() {
+        if(currentState==0) return;
+        const previousColormap = history[currentState-1];
+        setColormap(previousColormap);
+        setCurrentState(currentState-1)
     }
-    function redo() {
-        if(currentstate==history.length-1) return;
-        let colormap_tmp = history[currentstate+1];
-        setcolormap(colormap_tmp);
-        setCurrentState(currentstate+1)
+    function handleRedo() {
+        if(currentState==history.length-1) return;
+        const nextColormap = history[currentState+1];
+        setColormap(nextColormap);
+        setCurrentState(currentState+1)
     }
     
     const colors = colormap.map((color,i) => {
@@ -143,77 +143,75 @@ function ColorContainer() {
                 key={i}
                 rgb={color}
                 rank={i+1}
-                setBlankColor={()=>setBlankColor(i)}
-                swapUp={()=>swapUp(i)}
-                swapDown={()=>swapDown(i)}
-                changeColor={(e)=>changeColor(e,i)}
-                addColorDown={()=>addColorDown(i)}
-                delColor={()=>delColor(i)}
-                handleSlBlur={handleSlBlur}
-                colorid={i}
-                ncolor={colormap.length}
+                setBlankColor={()=>handleSetBlankColor(i)}
+                swapUp={()=>handleSwapUp(i)}
+                swapDown={()=>handleSwapDown(i)}
+                changeColor={(e)=>handleColorChange(e,i)}
+                addColorDown={()=>handleAddColorDown(i)}
+                delColor={()=>handleDeleteColor(i)}
+                handleSlBlur={handleColorPickerBlur}
+                colorId={i}
+                numColors={colormap.length}
             />
         )
     })
-    const color_in_rgb = colormap;
-    const color_out_rgb = interpolate(color_in_rgb, n_color_out)
+    const colorInRgb = colormap;
+    const colorOutRgb = interpolateColors(colorInRgb, numColorsOut)
     
     return (
         <>
-            <PreviewColorbar color_out_rgb={color_out_rgb}/>
+            <PreviewColorbar colorOutRgb={colorOutRgb}/>
             <SlButtonGroup>
-                <SlTooltip content="Undo"><SlButton size='small' onClick={undo} disabled={currentstate==0}>↶</SlButton></SlTooltip>
-                <SlTooltip content="Redo"><SlButton size='small' onClick={redo} disabled={currentstate==history.length-1}>↷</SlButton></SlTooltip>
+                <SlTooltip content="Undo"><SlButton size='small' onClick={handleUndo} disabled={currentState==0}>↶</SlButton></SlTooltip>
+                <SlTooltip content="Redo"><SlButton size='small' onClick={handleRedo} disabled={currentState==history.length-1}>↷</SlButton></SlTooltip>
             </SlButtonGroup>
             <br></br>
             <input
                 type="file"
                 accept=".rgb"
-                onChange={(e)=>{read_colormap_file(e)}}
+                onChange={(e)=>{handleColormapFileRead(e)}}
             ></input>
-            <DefaultMaps changeMap={(e)=>changeMap(e)} />
+            <DefaultMaps changeMap={(e)=>handleMapChange(e)} />
             <hr></hr>
             <div style={{display: 'flex', justifyContent: 'space-around'}}>
                 <div className="selector">
                     <label>n_colors: </label>
-                    <input type='number' step='1' value={inputnum} onChange={(e)=>changeOutNum(e)} onBlur={(e)=>handleBlur(e)} style={{width: '3em'}}></input>
+                    <input type='number' step='1' value={inputNum} onChange={(e)=>handleNumColorsChange(e)} onBlur={(e)=>handleNumColorsBlur(e)} style={{width: '3em'}}></input>
                     <SlButtonGroup>
-                    <SlTooltip content="reset"><SlButton size='small' onClick={resetOutNum} title='reset'><SlIcon name="arrow-repeat"></SlIcon></SlButton></SlTooltip>
-                    <SlTooltip content="add color down"><SlButton size='small' onClick={addColor} title='add color down'><SlIcon name="plus-square-fill"></SlIcon></SlButton></SlTooltip>
+                    <SlTooltip content="reset"><SlButton size='small' onClick={handleResetNumColors} title='reset'><SlIcon name="arrow-repeat"></SlIcon></SlButton></SlTooltip>
+                    <SlTooltip content="add color down"><SlButton size='small' onClick={handleAddColor} title='add color down'><SlIcon name="plus-square-fill"></SlIcon></SlButton></SlTooltip>
                     </SlButtonGroup>
                     {colors}
                 </div>
                 <ColorOutputText
-                    colorinrgb={color_in_rgb}
-                    coloroutrgb={color_out_rgb}
-                    setcolormap={setcolormap}
+                    colorInRgb={colorInRgb}
+                    colorOutRgb={colorOutRgb}
+                    setColormap={setColormap}
                     addHistory={addHistory}/>
             </div>
         </>
     );
 } // ColorContainer
 
-// 色塊
+// Color selector component
 function ColorSelector(props) {
     return (
         <div style={{flex: "0 0 auto", display: "flex", alignItems:"center", padding:"1px"}}>
             <span style={{display: "inline-block", width: "2em"}}>{props.rank}.</span>
-            {/* <input type="color" value={props.hex} onChange={(e,i)=>props.changeColor(e,i)} style={{width: "5em"}}></input> */}
             <SlColorPicker size='small'
                 value={props.rgb=='' ? '' : 'rgb('+props.rgb[0]+','+props.rgb[1]+','+props.rgb[2]+')'}
-                // format="rgb"
                 onSlInput={(e,i)=>props.changeColor(e,i)} 
                 onSlBlur={props.handleSlBlur}
             />
             <SlButtonGroup>
                 <SlTooltip content="set color to blank">
-                    <SlButton size="small" onClick={(i)=>props.setBlankColor(i)} disabled={props.colorid==0 || props.colorid==props.ncolor-1}>#</SlButton>
+                    <SlButton size="small" onClick={(i)=>props.setBlankColor(i)} disabled={props.colorId==0 || props.colorId==props.numColors-1}>#</SlButton>
                 </SlTooltip>
                 <SlTooltip content="swap up">
-                    <SlButton size="small" onClick={(i)=>props.swapUp(i)} disabled={props.colorid==0}>▲</SlButton>
+                    <SlButton size="small" onClick={(i)=>props.swapUp(i)} disabled={props.colorId==0}>▲</SlButton>
                 </SlTooltip>
                 <SlTooltip content="swap down">
-                    <SlButton size="small" onClick={(i)=>props.swapDown(i)} disabled={props.colorid==props.ncolor-1}>▼</SlButton>
+                    <SlButton size="small" onClick={(i)=>props.swapDown(i)} disabled={props.colorId==props.numColors-1}>▼</SlButton>
                 </SlTooltip>
                 <SlTooltip content="add color down">
                     <SlButton size="small" onClick={(i)=>props.addColorDown(i)}><SlIcon name="plus-square-fill"></SlIcon></SlButton>
@@ -227,47 +225,46 @@ function ColorSelector(props) {
     );
 } // ColorSelector
 
-// 內插顏色
-function interpolate(arr, n_color_out) {
-    // console.log(nn,a,b)
-    const n_color_in = arr.length;
-    n_color_out = Math.max(n_color_out,n_color_in);
-    const color_gcd = findGCD([n_color_in-1,n_color_out-1]);
-    const nn = lcm(n_color_out-1,n_color_in-1)+1;
-    const a = (n_color_in-1)/color_gcd;
-    const b = (n_color_out-1)/color_gcd
-    const tmp = [];
+// Interpolate colors between control points
+function interpolateColors(colorArray, numColorsOut) {
+    const numColorsIn = colorArray.length;
+    numColorsOut = Math.max(numColorsOut, numColorsIn);
+    const colorGcd = findGCD([numColorsIn-1, numColorsOut-1]);
+    const totalPoints = lcm(numColorsOut-1, numColorsIn-1)+1;
+    const stepA = (numColorsIn-1)/colorGcd;
+    const stepB = (numColorsOut-1)/colorGcd
+    const tempColors = [];
     const result = [];
     
-    var color_left = 0;
-    for (let j = 0; j < arr.length-1; j++) {
-        if(!arr[j+1]) continue;
-        var delta = 1/b/(j-color_left+1); // 計算間隔
-        for (let i = 0; i < b*(j-color_left+1); i++) {
-            const rr = arr[color_left][0]+(arr[j+1][0]-arr[color_left][0])*delta*i;
-            const gg = arr[color_left][1]+(arr[j+1][1]-arr[color_left][1])*delta*i;
-            const bb = arr[color_left][2]+(arr[j+1][2]-arr[color_left][2])*delta*i;
-            tmp.push([parseInt(rr),parseInt(gg),parseInt(bb)])
+    let leftColorIdx = 0;
+    for (let j = 0; j < colorArray.length-1; j++) {
+        if(!colorArray[j+1]) continue;
+        const delta = 1/stepB/(j-leftColorIdx+1); // Calculate interval
+        for (let i = 0; i < stepB*(j-leftColorIdx+1); i++) {
+            const red = colorArray[leftColorIdx][0]+(colorArray[j+1][0]-colorArray[leftColorIdx][0])*delta*i;
+            const green = colorArray[leftColorIdx][1]+(colorArray[j+1][1]-colorArray[leftColorIdx][1])*delta*i;
+            const blue = colorArray[leftColorIdx][2]+(colorArray[j+1][2]-colorArray[leftColorIdx][2])*delta*i;
+            tempColors.push([parseInt(red),parseInt(green),parseInt(blue)])
         }
-        color_left = j+1;
+        leftColorIdx = j+1;
     }
-    tmp.push(arr[arr.length-1]);
-    for (let i = 0; i < nn; i=i+a) {
-        result.push(tmp[i]);
+    tempColors.push(colorArray[colorArray.length-1]);
+    for (let i = 0; i < totalPoints; i=i+stepA) {
+        result.push(tempColors[i]);
     }
     return result;
 }
-var gcd = (x, y) => !y ? x : gcd(y, x % y);
-// 最小公倍數
-var lcm = (a, b) => (a / gcd(a, b)) * b;
-// 最大公因數
-var findGCD = (nums) => gcd(  Math.max(...nums), Math.min(...nums)  );
+// Greatest common divisor
+const gcd = (x, y) => !y ? x : gcd(y, x % y);
+// Least common multiple
+const lcm = (a, b) => (a / gcd(a, b)) * b;
+// Find GCD from array
+const findGCD = (nums) => gcd(Math.max(...nums), Math.min(...nums));
 
-function read_RGBA(content) {
+function parseRGBAData(content) {
     const lines = content.split('\n');
-    const MAXCOLORS = 1000;
-    const tmpCmap = [];
-    // const tmpCmap = new Array(MAXCOLORS).fill(null).map(() => [0.0, 0.0, 0.0, 0.0]);
+    const MAX_COLORS = 1000;
+    const tempColormap = [];
     let numColors = 0;
     let maxValue = -1.0;
 
@@ -275,10 +272,10 @@ function read_RGBA(content) {
         return !isNaN(parseFloat(s)) && isFinite(s);
     }
 
-    for (let i = 0; i < lines.length && numColors < MAXCOLORS; i++) {
+    for (let i = 0; i < lines.length && numColors < MAX_COLORS; i++) {
         let line = lines[i].trim();
         if (line.length === 0) {
-            line = "#"; // Zero-lengthed lines cause issues
+            line = "#"; // Skip empty lines
         }
         const tokens = line.split(/\s+/);
         if (tokens.length >= 3) {
@@ -299,12 +296,8 @@ function read_RGBA(content) {
                 alpha = parseFloat(tokens[3]);
             }
             if (red >= 0 && green >= 0 && blue >= 0) {
-                let tmpRGBA = [red, green, blue, alpha];
-                tmpCmap.push(tmpRGBA);
-                // tmpCmap[numColors][0] = red;
-                // tmpCmap[numColors][1] = green;
-                // tmpCmap[numColors][2] = blue;
-                // tmpCmap[numColors][3] = alpha;
+                const rgbaColor = [red, green, blue, alpha];
+                tempColormap.push(rgbaColor);
                 numColors++;
                 if (red > maxValue) {
                     maxValue = red;
@@ -319,43 +312,40 @@ function read_RGBA(content) {
         }
     }
 
-    const cmap = new Array(numColors).fill(null).map(() => [0.0, 0.0, 0.0, 0.0]);
+    const colormap = new Array(numColors).fill(null).map(() => [0.0, 0.0, 0.0, 0.0]);
     for (let i = 0; i < numColors; i++) {
-        cmap[i] = tmpCmap[i];
+        colormap[i] = tempColormap[i];
     }
 
     if (maxValue <= 1) {
         for (let i = 0; i < numColors; i++) {
-            cmap[i][3] = cmap[i][3] < 0 ? 1.0 : cmap[i][3];
+            colormap[i][3] = colormap[i][3] < 0 ? 1.0 : colormap[i][3];
             for (let j = 0; j < 3; j++) {
-                cmap[i][j] *= 255.0;
+                colormap[i][j] *= 255.0;
             }
         }
     } else if (maxValue < 256) {
         for (let i = 0; i < numColors; i++) {
-            cmap[i][3] = cmap[i][3] < 0 ? 255.0 : cmap[i][3];
-            // for (let j = 0; j < 3; j++) {
-            //     cmap[i][j] /= 255.0;
-            // }
+            colormap[i][3] = colormap[i][3] < 0 ? 255.0 : colormap[i][3];
         }
     } else {
         for (let i = 0; i < numColors; i++) {
-            cmap[i][3] = cmap[i][3] < 0 ? maxValue : cmap[i][3];
+            colormap[i][3] = colormap[i][3] < 0 ? maxValue : colormap[i][3];
             for (let j = 0; j < 3; j++) {
-                cmap[i][j] /= maxValue;
-                cmap[i][j] *= 255.0;
+                colormap[i][j] /= maxValue;
+                colormap[i][j] *= 255.0;
             }
         }
     }
 
-    // round rgb number to integer
+    // Round RGB values to integers
     for (let i = 0; i < numColors; i++) {
         for (let j = 0; j < 3; j++) {
-            cmap[i][j] = Math.round(cmap[i][j]);
+            colormap[i][j] = Math.round(colormap[i][j]);
         }
     }
     
-    return cmap;
+    return colormap;
 }
 
 export default ColorContainer

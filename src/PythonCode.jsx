@@ -8,9 +8,9 @@ setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.14.0/cdn/')
 
 import SlCopyButtonAdjust from './copy-button-adjust/SlCopyButtonAdjust.js';
 
-export function PythonCode({coloroutrgb}) {
+export function PythonCode({colorOutRgb}) {
     const [visible, setVisible] = useState(false);
-    const python_code = output_function_for_matplotlib(coloroutrgb)
+    const pythonCode = generateMatplotlibFunction(colorOutRgb)
 
     return (
         <>
@@ -23,26 +23,26 @@ export function PythonCode({coloroutrgb}) {
                 <SlCopyButtonAdjust
                     slot='header-actions'
                     style={{flex:"0 0 auto", display:"flex", alignItems:"center", fontSize:"var(--sl-font-size-medium)"}}
-                    value={python_code}>
+                    value={pythonCode}>
                 </SlCopyButtonAdjust>
-                <SlTextarea className='code-area' value={python_code} rows={15} size='small' readOnly></SlTextarea>
+                <SlTextarea className='code-area' value={pythonCode} rows={15} size='small' readOnly></SlTextarea>
             </SlDialog>
         </>
     )
 }
 
-function output_function_for_matplotlib(color_out_rgb) {
-    let out_str = ''
-    out_str+='def manual_cmap():\n'
-    out_str+='    import numpy as np\n'
-    out_str+='    from matplotlib.colors import LinearSegmentedColormap\n'
-    out_str+='    colors = [\n'
-    color_out_rgb.map((tmp)=>{
-        out_str+=('        ['+tmp[0]+','+tmp[1]+','+tmp[2]+'],\n')
+function generateMatplotlibFunction(colorOutRgb) {
+    let outputString = ''
+    outputString+='def manual_cmap():\n'
+    outputString+='    import numpy as np\n'
+    outputString+='    from matplotlib.colors import LinearSegmentedColormap\n'
+    outputString+='    colors = [\n'
+    colorOutRgb.map((tmp)=>{
+        outputString+=('        ['+tmp[0]+','+tmp[1]+','+tmp[2]+'],\n')
     })
-    out_str+='    ]\n'
-    out_str+='    return LinearSegmentedColormap.from_list("manual_cmap",np.array(colors)/255)\n'
-    out_str+='# cmap = manual_cmap()'
+    outputString+='    ]\n'
+    outputString+='    return LinearSegmentedColormap.from_list("manual_cmap",np.array(colors)/255)\n'
+    outputString+='# cmap = manual_cmap()'
 
-    return out_str
+    return outputString
 }

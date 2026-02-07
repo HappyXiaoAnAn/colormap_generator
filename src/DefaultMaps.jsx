@@ -1,5 +1,5 @@
 export function DefaultMaps(props) {
-    const mapnames = [
+    const mapNames = [
         'default',
         'cwy',
         'radar_dbz_cwb',
@@ -7,10 +7,10 @@ export function DefaultMaps(props) {
         'OceanLakeLandSnow'
     ]
 
-    const tmp = mapnames.map(
-        (mapname,i)=>{
+    const options = mapNames.map(
+        (mapName, i)=>{
             return (
-                <option key={i}>{mapname}</option>
+                <option key={i}>{mapName}</option>
             )
         }
     )
@@ -18,7 +18,7 @@ export function DefaultMaps(props) {
         <>
             <label>Template: </label>
             <select title='colormaps' onChange={(e)=>props.changeMap(e)} style={{maxWidth: "80px"}}>
-                {tmp}
+                {options}
             </select>
         </>
     )
