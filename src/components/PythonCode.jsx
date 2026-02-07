@@ -1,4 +1,3 @@
-import './button.css'
 import { useState, useRef, useEffect } from "react";
 import SlDialog from '@shoelace-style/shoelace/dist/react/dialog';
 import SlButton from '@shoelace-style/shoelace/dist/react/button';
@@ -6,7 +5,7 @@ import SlTextarea from '@shoelace-style/shoelace/dist/react/textarea';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
 setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.14.0/cdn/')
 
-import SlCopyButtonAdjust from './copy-button-adjust/SlCopyButtonAdjust.js';
+import SlCopyButtonAdjust from '../copy-button-adjust/SlCopyButtonAdjust.js';
 
 export function PythonCode({colorOutRgb}) {
     const [visible, setVisible] = useState(false);

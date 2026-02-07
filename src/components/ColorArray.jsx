@@ -3,7 +3,7 @@ import SlDialog from '@shoelace-style/shoelace/dist/react/dialog';
 import SlTextarea from '@shoelace-style/shoelace/dist/react/textarea';
 import SlButton from '@shoelace-style/shoelace/dist/react/button';
 
-import SlCopyButtonAdjust from './copy-button-adjust/SlCopyButtonAdjust.js';
+import SlCopyButtonAdjust from '../copy-button-adjust/SlCopyButtonAdjust.js';
 
 const COLOR_TYPES = ["RGB", "Hex"]
 
