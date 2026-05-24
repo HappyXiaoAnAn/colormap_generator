@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseRGBAData, parseColorData } from '../colorParser';
+import { parseRGBAData, parseColorData, serializeColorData } from '../colorParser';
 
 describe('colorParser', () => {
   describe('parseRGBAData', () => {
@@ -125,6 +125,36 @@ describe('colorParser', () => {
       
       // All blank content returns array of blank strings per implementation
       expect(result.every(item => item === '')).toBe(true);
+    });
+
+    it('should parse hex color entries when format=hex', () => {
+      const content = '#FF0000\n#00FF00\n#0000FF';
+      const result = parseColorData(content, 'hex');
+
+      expect(result).toHaveLength(3);
+      expect(result[0]).toEqual([255, 0, 0, 255.0]);
+      expect(result[1]).toEqual([0, 255, 0, 255.0]);
+      expect(result[2]).toEqual([0, 0, 255, 255.0]);
+    });
+
+    it('should ignore invalid hex lines when format=hex', () => {
+      const content = '#FF0000\ninvalid\n#00FF00';
+      const result = parseColorData(content, 'hex');
+
+      expect(result).toHaveLength(2);
+      expect(result[0]).toEqual([255, 0, 0, 255.0]);
+      expect(result[1]).toEqual([0, 255, 0, 255.0]);
+    });
+
+    it('should serialize color array to hex correctly', () => {
+      const fromParser = [
+        [255,0,0,255.0],
+        [0,255,0,255.0],
+        [0,0,255,255.0],
+      ];
+      const serialized = serializeColorData(fromParser, 'hex');
+
+      expect(serialized).toBe('#ff0000\n#00ff00\n#0000ff');
     });
   });
 });

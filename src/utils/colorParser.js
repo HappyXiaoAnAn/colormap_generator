@@ -94,12 +94,69 @@ export function parseRGBAData(content) {
     return colormap;
 }
 
-/**
- * Parse color data from user input or text (with blank color handling)
- * @param {string} content - Text content with color values
- * @returns {Array} Array of [R, G, B] color values or empty strings for blank colors
- */
-export function parseColorData(content) {
+function hexToRgb(hex) {
+    const result = /^#?([A-Fa-f0-9]{6})$/i.exec(hex);
+    if (!result) return null;
+
+    return [
+        parseInt(result[1].slice(0, 2), 16),
+        parseInt(result[1].slice(2, 4), 16),
+        parseInt(result[1].slice(4, 6), 16)
+    ];
+}
+
+function rgbToHex(rgb) {
+    if (!Array.isArray(rgb) || rgb.length < 3) return '';
+    const r = Math.max(0, Math.min(255, Math.round(rgb[0])));
+    const g = Math.max(0, Math.min(255, Math.round(rgb[1])));
+    const b = Math.max(0, Math.min(255, Math.round(rgb[2])));
+    const toHex = (v) => v.toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+export function serializeColorData(colorInRgb, format = 'rgb') {
+    if (!Array.isArray(colorInRgb)) return '';
+
+    return colorInRgb
+        .map((entry) => {
+            if (entry === '') return '';
+            if (!Array.isArray(entry) || entry.length < 3) return '';
+
+            if (format === 'hex') {
+                return rgbToHex(entry);
+            }
+
+            const r = Number(entry[0]);
+            const g = Number(entry[1]);
+            const b = Number(entry[2]);
+            if ([r, g, b].some((v) => Number.isNaN(v))) return '';
+            return `${r} ${g} ${b}`;
+        })
+        .join('\n');
+}
+
+export function parseColorData(content, format = 'rgb') {
+    if (format.toLowerCase() === 'hex') {
+        const lines = String(content).split('\n');
+        const result = [];
+
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed === '') {
+                result.push('');
+                continue;
+            }
+            const rgbValue = hexToRgb(trimmed);
+            if (!rgbValue) {
+                continue; // invalid line ignored
+            }
+            result.push([rgbValue[0], rgbValue[1], rgbValue[2], 255.0]);
+        }
+
+        return result;
+    }
+
+    // Default RGB behavior (existing parser semantics)
     const lines = content.split('\n');
     const MAX_COLORS = 1000;
     const tempColormap = [];
@@ -209,3 +266,4 @@ export function parseColorData(content) {
     
     return colormap;
 }
+
