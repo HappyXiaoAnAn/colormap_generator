@@ -4,6 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        dependency-type: "indirect"
+    allow:
+      - dependency-type: "direct"
+    security-updates-only: true
