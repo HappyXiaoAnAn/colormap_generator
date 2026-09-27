@@ -7,4 +7,3 @@ updates:
     ignore:
       - dependency-name: "*"
         dependency-type: "indirect"
-    security-updates-only: true
