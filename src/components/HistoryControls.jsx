@@ -1,6 +1,5 @@
 import React from 'react'
-import SlButton from '@shoelace-style/shoelace/dist/react/button'
-import SlButtonGroup from '@shoelace-style/shoelace/dist/react/button-group'
+import SlIconButton from '@shoelace-style/shoelace/dist/react/icon-button'
 import SlTooltip from '@shoelace-style/shoelace/dist/react/tooltip'
 
 /**
@@ -8,17 +7,13 @@ import SlTooltip from '@shoelace-style/shoelace/dist/react/tooltip'
  */
 export function HistoryControls({ onUndo, onRedo, canUndo, canRedo }) {
     return (
-        <SlButtonGroup>
-            <SlTooltip content="Undo">
-                <SlButton size='small' onClick={onUndo} disabled={!canUndo}>
-                    ↶
-                </SlButton>
+        <div className="history-controls">
+            <SlTooltip content="Undo (Ctrl+Z)">
+                <SlIconButton name="arrow-counterclockwise" label="Undo" onClick={onUndo} disabled={!canUndo} />
             </SlTooltip>
-            <SlTooltip content="Redo">
-                <SlButton size='small' onClick={onRedo} disabled={!canRedo}>
-                    ↷
-                </SlButton>
+            <SlTooltip content="Redo (Ctrl+Y)">
+                <SlIconButton name="arrow-clockwise" label="Redo" onClick={onRedo} disabled={!canRedo} />
             </SlTooltip>
-        </SlButtonGroup>
+        </div>
     );
 }

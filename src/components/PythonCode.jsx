@@ -1,31 +1,19 @@
-import { useState, useRef, useEffect } from "react";
-import SlDialog from '@shoelace-style/shoelace/dist/react/dialog';
-import SlButton from '@shoelace-style/shoelace/dist/react/button';
 import SlTextarea from '@shoelace-style/shoelace/dist/react/textarea';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
-setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.14.0/cdn/')
+setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/')
 
 import SlCopyButtonAdjust from '../copy-button-adjust/SlCopyButtonAdjust.js';
 
 export function PythonCode({colorOutRgb}) {
-    const [visible, setVisible] = useState(false);
     const pythonCode = generateMatplotlibFunction(colorOutRgb)
 
     return (
         <>
-            <SlButton size='small' onClick={() => setVisible(true)}>Python code</SlButton>
-            {/* <button className='button-85' onClick={() => setVisible(true)}>
-                <img src='https://matplotlib.org/stable/_static/logo_dark.svg' width={"100px"}/>
-            </button> */}
-
-            <SlDialog label='Python code' open={visible}  onSlAfterHide={() => setVisible(false)} style={{'--width':'100%', textAlign: "left"}}>
-                <SlCopyButtonAdjust
-                    slot='header-actions'
-                    style={{flex:"0 0 auto", display:"flex", alignItems:"center", fontSize:"var(--sl-font-size-medium)"}}
-                    value={pythonCode}>
-                </SlCopyButtonAdjust>
-                <SlTextarea className='code-area' value={pythonCode} rows={15} size='small' readOnly></SlTextarea>
-            </SlDialog>
+            <div className="code-header">
+                <span className="hint">Matplotlib <code>LinearSegmentedColormap</code></span>
+                <SlCopyButtonAdjust value={pythonCode} />
+            </div>
+            <SlTextarea className='code-area' value={pythonCode} rows={15} readOnly></SlTextarea>
         </>
     )
 }

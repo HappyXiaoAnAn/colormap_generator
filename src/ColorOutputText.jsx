@@ -3,16 +3,17 @@ import { PythonCode } from './components/PythonCode'
 import { ColorArray } from './components/ColorArray'
 
 import SlTextarea from '@shoelace-style/shoelace/dist/react/textarea';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
+import SlRadioGroup from '@shoelace-style/shoelace/dist/react/radio-group';
+import SlRadioButton from '@shoelace-style/shoelace/dist/react/radio-button';
 import { parseColorData, serializeColorData } from './utils/colorParser';
 
 export function ColorOutputText({colorInRgb, colorOutRgb, setColormap, addHistory}) {
     const [format, setFormat] = useState('rgb');
 
     const colorString = serializeColorData(colorInRgb, format);
-
-    function handleFormatChange(e) {
-        setFormat(e.target.value);
-    }
 
     function handleTextChange(e) {
         const colormapData = parseColorData(e.target.value, format);
@@ -21,22 +22,32 @@ export function ColorOutputText({colorInRgb, colorOutRgb, setColormap, addHistor
     }
 
     return (
-        <div className="txtarea">
-            <div>
+        <SlTabGroup>
+            <SlTab slot="nav" panel="edit">Edit as text</SlTab>
+            <SlTab slot="nav" panel="array">Color array</SlTab>
+            <SlTab slot="nav" panel="python">Python</SlTab>
+
+            <SlTabPanel name="edit">
+                <div className="format-row">
+                    <SlRadioGroup size="small" label="Format" value={format} onSlChange={(e) => setFormat(e.target.value)}>
+                        <SlRadioButton value="rgb">R G B</SlRadioButton>
+                        <SlRadioButton value="hex">#RRGGBB</SlRadioButton>
+                    </SlRadioGroup>
+                </div>
+                <SlTextarea
+                    className="code-area"
+                    value={colorString}
+                    rows={Math.min(colorInRgb.length + 1, 20)}
+                    helpText="One control point per line; empty lines are interpolated. Changes apply when the box loses focus."
+                    onSlChange={handleTextChange}
+                />
+            </SlTabPanel>
+            <SlTabPanel name="array">
+                <ColorArray colorOutRgb={colorOutRgb} />
+            </SlTabPanel>
+            <SlTabPanel name="python">
                 <PythonCode colorOutRgb={colorOutRgb} />
-                <ColorArray colorOutRgb={colorOutRgb}/>
-            </div>
-            <div style={{ marginBottom: '0.5rem' }}>
-                <label style={{ marginRight: '0.5rem' }} htmlFor="color-format-select">Color text format:</label>
-                <select id="color-format-select" value={format} onChange={handleFormatChange}>
-                    <option value="rgb">RGB (R G B)</option>
-                    <option value="hex">Hex (#RRGGBB)</option>
-                </select>
-                <span style={{ marginLeft: '1rem', fontSize: '0.85rem', color: '#666' }}>
-                    Enter colors in selected format; invalid lines are ignored.
-                </span>
-            </div>
-            <SlTextarea value={colorString} rows={colorInRgb.length+1} onSlChange={(e) => handleTextChange(e)}></SlTextarea>
-        </div>
+            </SlTabPanel>
+        </SlTabGroup>
     )
 }

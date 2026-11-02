@@ -1,9 +1,7 @@
 import React from 'react'
 import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker'
-import SlButton from '@shoelace-style/shoelace/dist/react/button'
-import SlButtonGroup from '@shoelace-style/shoelace/dist/react/button-group'
+import SlIconButton from '@shoelace-style/shoelace/dist/react/icon-button'
 import SlTooltip from '@shoelace-style/shoelace/dist/react/tooltip'
-import SlIcon from '@shoelace-style/shoelace/dist/react/icon'
 
 /**
  * Single color selector component
@@ -23,57 +21,59 @@ export function ColorSelector({
 }) {
     const isFirstColor = colorId === 0;
     const isLastColor = colorId === numColors - 1;
-    const rgbValue = rgb === '' ? '' : `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+    const isBlank = rgb === '';
+    const rgbValue = isBlank ? '' : `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
 
     return (
-        <div style={{flex: "0 0 auto", display: "flex", alignItems:"center", padding:"1px"}}>
-            <span style={{display: "inline-block", width: "2em"}}>{rank}.</span>
-            <SlColorPicker 
+        <div className={isBlank ? 'color-row is-blank' : 'color-row'}>
+            <span className="rank">{rank}.</span>
+            <SlColorPicker
                 size='small'
+                label={`color ${rank}`}
                 value={rgbValue}
-                onSlInput={(e) => onColorChange(e, colorId)} 
+                onSlInput={(e) => onColorChange(e, colorId)}
                 onSlBlur={onBlur}
             />
-            <SlButtonGroup>
-                <SlTooltip content="set color to blank">
-                    <SlButton 
-                        size="small" 
-                        onClick={() => onSetBlankColor(colorId)} 
-                        disabled={isFirstColor || isLastColor}
-                    >
-                        #
-                    </SlButton>
-                </SlTooltip>
-                <SlTooltip content="swap up">
-                    <SlButton 
-                        size="small" 
-                        onClick={() => onSwapUp(colorId)} 
-                        disabled={isFirstColor}
-                    >
-                        ▲
-                    </SlButton>
-                </SlTooltip>
-                <SlTooltip content="swap down">
-                    <SlButton 
-                        size="small" 
-                        onClick={() => onSwapDown(colorId)} 
-                        disabled={isLastColor}
-                    >
-                        ▼
-                    </SlButton>
-                </SlTooltip>
-                <SlTooltip content="add color down">
-                    <SlButton size="small" onClick={() => onAddColorDown(colorId)}>
-                        <SlIcon name="plus-square-fill" />
-                    </SlButton>
-                </SlTooltip>
-                <SlTooltip content="delete color">
-                    <SlButton size="small" onClick={() => onDeleteColor(colorId)}>
-                        X
-                    </SlButton>
-                </SlTooltip>
-            </SlButtonGroup>
-            <br />
+            <span className="auto-tag">{isBlank ? 'auto' : ''}</span>
+            <SlTooltip content="Clear (interpolate automatically)">
+                <SlIconButton
+                    name="eraser"
+                    label="Clear color"
+                    onClick={() => onSetBlankColor(colorId)}
+                    disabled={isBlank || isFirstColor || isLastColor}
+                />
+            </SlTooltip>
+            <SlTooltip content="Move up">
+                <SlIconButton
+                    name="arrow-up"
+                    label="Move up"
+                    onClick={() => onSwapUp(colorId)}
+                    disabled={isFirstColor}
+                />
+            </SlTooltip>
+            <SlTooltip content="Move down">
+                <SlIconButton
+                    name="arrow-down"
+                    label="Move down"
+                    onClick={() => onSwapDown(colorId)}
+                    disabled={isLastColor}
+                />
+            </SlTooltip>
+            <SlTooltip content="Insert color below">
+                <SlIconButton
+                    name="plus-lg"
+                    label="Insert color below"
+                    onClick={() => onAddColorDown(colorId)}
+                />
+            </SlTooltip>
+            <SlTooltip content="Delete">
+                <SlIconButton
+                    name="trash"
+                    label="Delete color"
+                    onClick={() => onDeleteColor(colorId)}
+                    disabled={numColors <= 2}
+                />
+            </SlTooltip>
         </div>
     );
 }

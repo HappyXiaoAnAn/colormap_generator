@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import SlButton from '@shoelace-style/shoelace/dist/react/button'
+import SlIcon from '@shoelace-style/shoelace/dist/react/icon'
 import { PreviewColorbar } from './PreviewColorbar'
 import { HistoryControls } from './HistoryControls'
 import { ColorImportControls } from './ColorImportControls'
@@ -39,8 +41,7 @@ export function ColorContainer() {
         fileReader.readAsText(file);
     };
 
-    const handleMapChange = (e) => {
-        const mapName = e.target.value;
+    const handleMapChange = (mapName) => {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', './colormap/' + mapName + '.rgb');
         xhr.responseType = 'text';
@@ -141,9 +142,11 @@ export function ColorContainer() {
 
     // Num colors handlers
     const handleNumColorsChange = (e) => {
-        const numColors = e.target.value < colormap.length ? inputNum : e.target.value;
+        const value = Number(e.target.value);
         setInputNum(e.target.value);
-        setNumColorsOut(numColors);
+        if (value >= colormap.length) {
+            setNumColorsOut(value);
+        }
     };
 
     const handleResetNumColors = () => {
@@ -152,7 +155,8 @@ export function ColorContainer() {
     };
 
     const handleNumColorsBlur = (e) => {
-        const numColors = e.target.value < colormap.length ? colormap.length : e.target.value;
+        const value = Number(e.target.value);
+        const numColors = value < colormap.length ? colormap.length : value;
         setInputNum(numColors);
         setNumColorsOut(numColors);
     };
@@ -172,6 +176,26 @@ export function ColorContainer() {
         }
     };
 
+    // Keyboard shortcuts: Ctrl/Cmd+Z undo, Ctrl/Cmd+Shift+Z or Ctrl+Y redo
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (!(e.ctrlKey || e.metaKey)) return;
+            // Keep native undo inside text fields (including Shoelace shadow DOM)
+            const target = e.composedPath()[0];
+            if (target && ['INPUT', 'TEXTAREA'].includes(target.tagName)) return;
+            const key = e.key.toLowerCase();
+            if (key === 'z' && !e.shiftKey) {
+                e.preventDefault();
+                handleUndo();
+            } else if (key === 'y' || (key === 'z' && e.shiftKey)) {
+                e.preventDefault();
+                handleRedo();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    });
+
     const handleColorPickerBlur = () => {
         const updatedColormap = [...colormap];
         addToHistory(updatedColormap);
@@ -183,28 +207,41 @@ export function ColorContainer() {
 
     return (
         <>
-            <PreviewColorbar colorOutRgb={colorOutRgb} />
-            <HistoryControls
-                onUndo={handleUndo}
-                onRedo={handleRedo}
-                canUndo={canUndo}
-                canRedo={canRedo}
-            />
-            <br />
-            <ColorImportControls
-                onFileImport={handleColormapFileRead}
-                onMapChange={handleMapChange}
-            />
-            <hr />
-            <div style={{display: 'flex', justifyContent: 'space-around'}}>
-                <div className="selector">
-                    <ColorControls
-                        numColors={inputNum}
-                        onNumColorsChange={handleNumColorsChange}
-                        onNumColorsBlur={handleNumColorsBlur}
-                        onReset={handleResetNumColors}
-                        onAddColor={handleAddColor}
-                    />
+            <header className="app-header">
+                <div>
+                    <h1>Colormap Generator</h1>
+                    <p>Pick a few control points, leave the rest blank to interpolate, then export.</p>
+                </div>
+                <HistoryControls
+                    onUndo={handleUndo}
+                    onRedo={handleRedo}
+                    canUndo={canUndo}
+                    canRedo={canRedo}
+                />
+            </header>
+            <PreviewColorbar colorOutRgb={colorOutRgb} colormap={colormap} />
+            <div className="toolbar">
+                <ColorImportControls
+                    onFileImport={handleColormapFileRead}
+                    onMapChange={handleMapChange}
+                />
+                <ColorControls
+                    numColors={inputNum}
+                    minColors={colormap.length}
+                    onNumColorsChange={handleNumColorsChange}
+                    onNumColorsBlur={handleNumColorsBlur}
+                    onReset={handleResetNumColors}
+                />
+            </div>
+            <div className="main-grid">
+                <section className="panel">
+                    <div className="panel-header">
+                        <h2>Control points ({colormap.length})</h2>
+                        <SlButton size="small" onClick={handleAddColor}>
+                            <SlIcon slot="prefix" name="plus-lg" />
+                            Add at top
+                        </SlButton>
+                    </div>
                     <ColorGrid
                         colormap={colormap}
                         onSetBlankColor={handleSetBlankColor}
@@ -215,14 +252,21 @@ export function ColorContainer() {
                         onDeleteColor={handleDeleteColor}
                         onColorPickerBlur={handleColorPickerBlur}
                     />
-                </div>
-                <ColorOutputPanel
-                    colorInRgb={colorInRgb}
-                    colorOutRgb={colorOutRgb}
-                    onColorUpdate={setColormap}
-                    onAddToHistory={addToHistory}
-                />
+                </section>
+                <section className="panel">
+                    <h2>Output ({colorOutRgb.length} colors)</h2>
+                    <ColorOutputPanel
+                        colorInRgb={colorInRgb}
+                        colorOutRgb={colorOutRgb}
+                        onColorUpdate={setColormap}
+                        onAddToHistory={addToHistory}
+                    />
+                </section>
             </div>
+            <footer className="app-footer">
+                <p>More colormaps: <a href="https://www.ncl.ucar.edu/Document/Graphics/color_table_gallery.shtml" target="_blank" rel="noreferrer">NCL Graphics: Color Table Gallery</a></p>
+                <p>Source on <a href="https://github.com/HappyXiaoAnAn/colormap_generator" target="_blank" rel="noreferrer">GitHub</a></p>
+            </footer>
         </>
     );
 }

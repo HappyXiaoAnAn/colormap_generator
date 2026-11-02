@@ -5,7 +5,7 @@ import { getAnimation, setDefaultAnimation } from '@shoelace-style/shoelace/dist
 import { LocalizeController } from '@shoelace-style/localize';
 
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path';
-setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.14.0/cdn/')
+setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/')
 import SlIcon from '@shoelace-style/shoelace/dist/react/icon';
 
 import { classMap } from "lit/directives/class-map.js";

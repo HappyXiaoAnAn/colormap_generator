@@ -1,42 +1,39 @@
 import React from 'react'
-import SlButton from '@shoelace-style/shoelace/dist/react/button'
-import SlButtonGroup from '@shoelace-style/shoelace/dist/react/button-group'
+import SlInput from '@shoelace-style/shoelace/dist/react/input'
+import SlIconButton from '@shoelace-style/shoelace/dist/react/icon-button'
 import SlTooltip from '@shoelace-style/shoelace/dist/react/tooltip'
-import SlIcon from '@shoelace-style/shoelace/dist/react/icon'
 
 /**
  * Colormap size controls (number of output colors)
  */
-export function ColorControls({ 
-    numColors, 
-    onNumColorsChange, 
+export function ColorControls({
+    numColors,
+    minColors,
+    onNumColorsChange,
     onNumColorsBlur,
-    onReset, 
-    onAddColor 
+    onReset
 }) {
+    const tooFew = Number(numColors) < minColors;
+
     return (
-        <div className="selector">
-            <label>n_colors: </label>
-            <input 
-                type='number' 
-                step='1' 
-                value={numColors} 
-                onChange={onNumColorsChange}
-                onBlur={onNumColorsBlur}
-                style={{width: '3em'}}
-            />
-            <SlButtonGroup>
-                <SlTooltip content="reset">
-                    <SlButton size='small' onClick={onReset} title='reset'>
-                        <SlIcon name="arrow-repeat" />
-                    </SlButton>
+        <div className="count-control">
+            <label htmlFor="num-colors-input">Output colors</label>
+            <SlInput
+                id="num-colors-input"
+                type='number'
+                min={minColors}
+                step={1}
+                value={String(numColors)}
+                onSlInput={onNumColorsChange}
+                onSlBlur={onNumColorsBlur}
+            >
+                <SlTooltip slot="suffix" content="Reset to number of control points">
+                    <SlIconButton name="arrow-repeat" label="Reset" onClick={onReset} />
                 </SlTooltip>
-                <SlTooltip content="add color">
-                    <SlButton size='small' onClick={onAddColor} title='add color'>
-                        <SlIcon name="plus-square-fill" />
-                    </SlButton>
-                </SlTooltip>
-            </SlButtonGroup>
+            </SlInput>
+            <span className={tooFew ? 'hint hint-warning' : 'hint'}>
+                {tooFew ? `Must be at least ${minColors}` : `min ${minColors}`}
+            </span>
         </div>
     );
 }
